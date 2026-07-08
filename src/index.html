@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="https://caretparrot.github.io/papaya-salad/Profile Picture.png">
+        <link rel="manifest" href="./manifest.json">
+        <link rel="stylesheet" href="https://caretparrot.github.io/papaya-palettes/default.css">
+        <link rel="stylesheet" href="./styles.css">
+        <script defer src="https://caretparrot.github.io/papaya-salad/script.js"></script>
+        <script defer src="./main.js"></script>
+        <title>Noteworthy</title>
+    </head>
+
+    <body>
+        <h1>Noteworthy</h1>
+        <div id="toolbar">
+            <input type="file" id="fileImport" accept=".csv,.txt">
+            <button id="saveButton">Save</button>
+            <button id="shortcutsButton" onclick="openShortcuts()">Shortcuts</button>
+        </div>
+        <div id="database-wrapper">
+            <a class="label" data-parent="-1"></a>
+            <input class="key" placeholder="Term">
+            <textarea class="value" placeholder="Definition"></textarea>
+        </div>
+        <dialog id="fileNameDialog">
+            <input id="fileNameInput" type="text" placeholder="Name the file...">
+            <button onclick="closeDialogs()">Close</button>
+        </dialog>
+        <dialog id="keyboardShortcutsDialog">
+            <p>
+                Ctrl+s: Save To Disk<br>
+                Ctrl+o: Open File<br>
+                Shift+Enter: Add New Line Within Definition<br>
+                Ctrl+Enter: Add Linked Note
+                Ctrl+Enter: Add Linked Note
+            </p>
+            <button onclick="closeDialogs()">Close</button>
+        </dialog>
+    </body>
+
+</html>
