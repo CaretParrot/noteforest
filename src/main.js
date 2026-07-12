@@ -20,6 +20,7 @@ function addNote(parentIndex = -1) {
     let newLabel = document.createElement("a");
     newLabel.classList.add("label");
 
+    // Adds linking if the note was created with a linked index, otherwise
     newLabel.dataset.parent = String(parentIndex);
 
     if (parentIndex !== -1) {
@@ -35,8 +36,11 @@ function addNote(parentIndex = -1) {
     // Creates new value field
     let newValue = document.createElement("textarea");
     newValue.classList.add("value");
-    newKey.placeholder = "Definition";
+    newValue.placeholder = "Definition";
 
+    newKey.id = `${notesKeys.length}-key`;
+    newValue.id = `${notesValues.length}-value`;
+    
     // Add both input fields and the label to the wrapper element
     document.getElementById("database-wrapper")?.appendChild(newLabel);
     document.getElementById("database-wrapper")?.appendChild(newKey);
@@ -74,18 +78,22 @@ let shift = false;
  */
 function refreshEnterToAddNote() {
     for (let i = 0; i < notesLabels.length; i++) {
+
+        // ctrl+click: Clear linking on label
         notesLabels[i].onclick = function (event) {
             if (ctrl) {
                 event.preventDefault();
                 notesLabels[i].innerHTML = "";
                 notesLabels[i].href = "";
+                notesLabels[i].style.pointerEvents = "none";
                 notesLabels[i].dataset.parent = "";
             }
         }
 
         if (notesLabels[i].dataset.parent !== "-1") {
             notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
-            notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
+            // @ts-expect-error
+            notesLabels[i].innerHTML = document.getElementById(`${notesLabels[i].dataset.parent}-key`).value;
         }
     }
 
@@ -97,15 +105,12 @@ function refreshEnterToAddNote() {
             }
         }
 
-        // Update the id of key and value
-        notesKeys[i].id = `${i}-key`;
-        notesValues[i].id = `${i}-value`;
-
+        // Update coorespoding labels when editing a key
         notesKeys[i].oninput = function () {
             for (let i = 0; i < notesLabels.length; i++) {
                 if (notesLabels[i].dataset.parent !== "-1") {
-                    notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
-                    notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
+                    // @ts-expect-error
+                    notesLabels[i].innerHTML = document.getElementById(`${notesLabels[i].dataset.parent}-key`).value;
                 }
             }
         }
