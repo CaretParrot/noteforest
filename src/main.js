@@ -1,4 +1,5 @@
 // DOM Elements
+
 let database = document.getElementById("database-wrapper");
 let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 let notesValues = /** @type {HTMLCollectionOf<HTMLTextAreaElement>} */ (document.getElementsByClassName("value"));
@@ -58,13 +59,30 @@ function addNote(parentIndex = -1) {
  * @returns {void}
  */
 function removeNote(index) {
+    // If a linked note points back to the note being removed, remove the linking
+    for (let i = 0; i < notesLabels.length; i++) {
+        if (notesLabels[i].dataset.parent === `${index}`) {
+            notesLabels[i].innerHTML = "";
+            notesLabels[i].href = "";
+            notesLabels[i].style.pointerEvents = "none";
+            notesLabels[i].dataset.parent = "-1";
+        }
+    }
+
     // Remove both fields and the label
     notesLabels[index].remove();
     notesValues[index].remove();
     notesKeys[index].remove();
 
     // Set the focus to the previous value field, then refresh keybinds
-    notesValues[index - 1].focus();
+    try {
+        notesValues[index - 1].focus();
+    }
+    catch (error) {
+        if (error !== TypeError) {
+            throw error;
+        }
+    }
     refreshEnterToAddNote();
 }
 
@@ -77,28 +95,8 @@ let shift = false;
  * @returns {void}
  */
 function refreshEnterToAddNote() {
-    for (let i = 0; i < notesLabels.length; i++) {
-
-        // ctrl+click: Clear linking on label
-        notesLabels[i].onclick = function (event) {
-            if (ctrl) {
-                event.preventDefault();
-                notesLabels[i].innerHTML = "";
-                notesLabels[i].href = "";
-                notesLabels[i].style.pointerEvents = "none";
-                notesLabels[i].dataset.parent = "";
-            }
-        }
-
-        if (notesLabels[i].dataset.parent !== "-1") {
-            notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
-            // @ts-expect-error
-            notesLabels[i].innerHTML = document.getElementById(`${notesLabels[i].dataset.parent}-key`).value;
-        }
-    }
-
+    // Remove empty fields when hitting backspace on key fields
     for (let i = 0; i < notesKeys.length; i++) {
-        // Remove empty fields when hitting backspace on key fields
         notesKeys[i].onkeydown = function (event) {
             if (event.key === "Backspace" && notesValues[i].value === "" && notesKeys[i].value === "" && notesKeys.length > 1) {
                 removeNote(i);
@@ -107,10 +105,10 @@ function refreshEnterToAddNote() {
 
         // Update coorespoding labels when editing a key
         notesKeys[i].oninput = function () {
-            for (let i = 0; i < notesLabels.length; i++) {
-                if (notesLabels[i].dataset.parent !== "-1") {
+            for (let j = 0; j < notesLabels.length; j++) {
+                if (notesLabels[j].dataset.parent === `${i}`) {
                     // @ts-expect-error
-                    notesLabels[i].innerHTML = document.getElementById(`${notesLabels[i].dataset.parent}-key`).value;
+                    notesLabels[j].innerHTML = document.getElementById(`${notesLabels[j].dataset.parent}-key`).value;
                 }
             }
         }
@@ -127,8 +125,6 @@ function refreshEnterToAddNote() {
             if (ctrl && !shift && event.key === "Enter") {
                 addNote(i);
             }
-
-            // shift+enter: Add a new line in the value field
 
             // Remove empty fields when hitting backspace on value fields
             if (event.key === "Backspace" && notesValues[i].value === "" && notesKeys[i].value === "" && notesKeys.length > 1) {
@@ -155,14 +151,14 @@ function parseCSV(text) {
     }
 
     for (let i = 0; i < lines.length; i++) {
-        if (lines[i].split("|")[0] !== "" && lines[i].split("|")[0] !== "-1") {
-            notesLabels[i].dataset.parent = lines[i].split("|")[0];
+        if (lines[i].split("|")[1] !== "" && lines[i].split("|")[1] !== "-1") {
+            notesLabels[i].dataset.parent = lines[i].split("|")[1];
             notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
             notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
         }
 
-        notesKeys[i].value = lines[i].split("|")[1];
-        notesValues[i].value = lines[i].split("|")[2];
+        notesKeys[i].value = lines[i].split("|")[2];
+        notesValues[i].value = lines[i].split("|")[3];
     }
 
     refreshEnterToAddNote();
@@ -204,7 +200,7 @@ function generateCSV() {
     let csvText = "";
 
     for (let i = 0; i < notesKeys.length; i++) {
-        csvText += `${notesLabels[i].dataset.parent}|${notesKeys[i].value}|${notesValues[i].value}`;
+        csvText += `${i}|${notesLabels[i].dataset.parent}|${notesKeys[i].value}|${notesValues[i].value}`;
         if (i !== notesKeys.length - 1) {
             csvText += `\n`;
         }
@@ -275,7 +271,7 @@ onkeydown = function (event) {
 }
 
 /**
- * Releases control key
+ * Releases control and shift keys
  */
 
 onkeyup = function (event) {
@@ -293,7 +289,6 @@ saveButton.onclick = function () {
 }
 
 /**
- * 
  * @param {*} event 
  */
 fileNameInput.onkeydown = function (event) {
