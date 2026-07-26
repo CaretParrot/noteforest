@@ -21,9 +21,9 @@ function addNote(parentIndex = -1) {
     let newLabel = document.createElement("a");
     newLabel.classList.add("label");
 
-    // Adds linking if the note was created with a linked index, otherwise
     newLabel.dataset.parent = String(parentIndex);
 
+    // Adds a link back to the parent note if it is a linked note.
     if (parentIndex !== -1) {
         newLabel.innerHTML = notesKeys[parentIndex].value;
         newLabel.href = `#${parentIndex}-key`;
@@ -33,13 +33,12 @@ function addNote(parentIndex = -1) {
     let newKey = document.createElement("input");
     newKey.classList.add("key");
     newKey.placeholder = "Term";
+    newKey.id = `${notesKeys.length}-key`;
 
     // Creates new value field
     let newValue = document.createElement("textarea");
     newValue.classList.add("value");
     newValue.placeholder = "Definition";
-
-    newKey.id = `${notesKeys.length}-key`;
     newValue.id = `${notesValues.length}-value`;
     
     // Add both input fields and the label to the wrapper element
@@ -61,7 +60,7 @@ function addNote(parentIndex = -1) {
 function removeNote(index) {
     // If a linked note points back to the note being removed, remove the linking
     for (let i = 0; i < notesLabels.length; i++) {
-        if (notesLabels[i].dataset.parent === `${index}`) {
+        if (notesLabels[i].dataset.parent === String(index)) {
             notesLabels[i].innerHTML = "";
             notesLabels[i].href = "";
             notesLabels[i].style.pointerEvents = "none";
@@ -106,7 +105,7 @@ function refreshEnterToAddNote() {
         // Update coorespoding labels when editing a key
         notesKeys[i].oninput = function () {
             for (let j = 0; j < notesLabels.length; j++) {
-                if (notesLabels[j].dataset.parent === `${i}`) {
+                if (notesLabels[j].dataset.parent === String(j)) {
                     // @ts-expect-error
                     notesLabels[j].innerHTML = document.getElementById(`${notesLabels[j].dataset.parent}-key`).value;
                 }
@@ -139,7 +138,7 @@ function refreshEnterToAddNote() {
  * 
  * @param {string} text 
  */
-function parseCSV(text) {
+function parsePSV(text) {
     let lines = text.split("\n");
 
     for (let i = notesKeys.length - 1; i > 0; i--) {
@@ -169,7 +168,6 @@ function parseCSV(text) {
  * 
  * @returns {void}
  */
-
 function readFile() {
     if (fileImport.files === null) {
         return;
@@ -182,7 +180,7 @@ function readFile() {
     reader.addEventListener("load", () => {
         text = reader.result;
         // @ts-expect-error
-        parseCSV(text);
+        parsePSV(text);
     });
 
     if (file) {
@@ -195,8 +193,7 @@ function readFile() {
  * 
  * @returns {string}
  */
-
-function generateCSV() {
+function generatePSV() {
     let csvText = "";
 
     for (let i = 0; i < notesKeys.length; i++) {
@@ -215,9 +212,8 @@ function generateCSV() {
  * @param {string} fileName
  * @returns {void}
  */
-
 function downloadCSV(fileName) {
-    let csvText = generateCSV();
+    let csvText = generatePSV();
 
     let blob = new Blob([csvText], {
         type: "text/plain"
@@ -263,10 +259,14 @@ onkeydown = function (event) {
         fileImport.click();
     }
 
+    if (ctrl === true && event.key === "/") {
+        event.preventDefault();
+        openShortcuts();
+    }
+
     if (event.key === "Escape") {
         event.preventDefault();
-        fileNameDialog.close();
-        keyboardShortcutsDialog.close();
+        closeDialogs();
     }
 }
 
