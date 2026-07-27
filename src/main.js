@@ -4,11 +4,16 @@ let database = document.getElementById("database-wrapper");
 let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 let notesValues = /** @type {HTMLCollectionOf<HTMLTextAreaElement>} */ (document.getElementsByClassName("value"));
 let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
-let fileImport = /** @type {HTMLInputElement} */ (document.getElementById("fileImport"));
+let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editorFileImport"));
+let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcardFileImport"));
 let saveButton = /** @type {HTMLButtonElement} */ (document.getElementById("saveButton"));
 let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("fileNameDialog"));
 let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboardShortcutsDialog"));
 let fileNameInput = /** @type {HTMLInputElement} */ (document.getElementById("fileNameInput"));
+let flashcardsDisplay = /** @type {HTMLDivElement} */ (document.getElementById("flashcardsDisplay"));
+
+// @ts-expect-error
+let pageGroup = new PageGroup("page", "grid");
 
 /**
  * Appends new key value fields to the end of the document
@@ -40,7 +45,7 @@ function addNote(parentIndex = -1) {
     newValue.classList.add("value");
     newValue.placeholder = "Definition";
     newValue.id = `${notesValues.length}-value`;
-    
+
     // Add both input fields and the label to the wrapper element
     document.getElementById("database-wrapper")?.appendChild(newLabel);
     document.getElementById("database-wrapper")?.appendChild(newKey);
@@ -133,12 +138,14 @@ function refreshEnterToAddNote() {
     }
 }
 
+refreshEnterToAddNote();
+
 /**
  * Splits CSV document into key value fields 
  * 
  * @param {string} text 
  */
-function parsePSV(text) {
+function editorParsePSV(text) {
     let lines = text.split("\n");
 
     for (let i = notesKeys.length - 1; i > 0; i--) {
@@ -164,23 +171,67 @@ function parsePSV(text) {
 }
 
 /**
- * Reads in a file from the file input, passing the text into parseCSV
+ * Reads in a file from the file input, passing the text into editorParsePSV
  * 
  * @returns {void}
  */
-function readFile() {
-    if (fileImport.files === null) {
+function editorReadFile() {
+    if (editorFileImport.files === null) {
         return;
     }
 
-    const file = fileImport.files[0];
+    const file = editorFileImport.files[0];
     const reader = new FileReader();
     let text;
 
     reader.addEventListener("load", () => {
         text = reader.result;
         // @ts-expect-error
-        parsePSV(text);
+        editorParsePSV(text);
+    });
+
+    if (file) {
+        reader.readAsText(file);
+    }
+}
+
+/**
+ * Splits CSV document into key value fields 
+ * 
+ * @param {string} text 
+ */
+function flashcardParsePSV(text) {
+    let lines = text.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+        let term = document.createElement("h1");
+        term.innerHTML = lines[i].split("|")[2];
+        flashcardsDisplay.appendChild(term);
+
+        let definition = document.createElement("p");
+        definition.innerHTML = lines[i].split("|")[3];
+        flashcardsDisplay.appendChild(definition);
+    }
+}
+
+/**
+ * Reads in a file from the file input, passing the text into editorParsePSV
+ * 
+ * @returns {void}
+ */
+function flashcardReadFile() {
+    if (flashcardFileImport.files === null) {
+        return;
+    }
+
+    const file = flashcardFileImport.files[0];
+    const reader = new FileReader();
+    let text;
+
+    reader.addEventListener("load", () => {
+        text = reader.result;
+        // @ts-expect-error
+        flashcardParsePSV(text);
     });
 
     if (file) {
@@ -193,7 +244,7 @@ function readFile() {
  * 
  * @returns {string}
  */
-function generatePSV() {
+function editorGeneratePSV() {
     let csvText = "";
 
     for (let i = 0; i < notesKeys.length; i++) {
@@ -212,8 +263,8 @@ function generatePSV() {
  * @param {string} fileName
  * @returns {void}
  */
-function downloadCSV(fileName) {
-    let csvText = generatePSV();
+function editorDownloadPSV(fileName) {
+    let csvText = editorGeneratePSV();
 
     let blob = new Blob([csvText], {
         type: "text/plain"
@@ -226,12 +277,20 @@ function downloadCSV(fileName) {
     downloadLink.remove();
 }
 
-fileImport.onclick = function () {
-    fileImport.value = "";
+editorFileImport.onclick = function () {
+    editorFileImport.value = "";
 }
 
-fileImport.onchange = function () {
-    readFile();
+flashcardFileImport.onclick = function () {
+    flashcardFileImport.value = "";
+}
+
+editorFileImport.onchange = function () {
+    editorReadFile();
+}
+
+flashcardFileImport.onchange = function () {
+    flashcardReadFile();
 }
 
 /**
@@ -239,7 +298,6 @@ fileImport.onchange = function () {
  * ctrl+s: Save To Disk
  * ctrl+o: Open File From Disk
  */
-
 onkeydown = function (event) {
     if (event.key === "Control") {
         ctrl = true;
@@ -256,7 +314,7 @@ onkeydown = function (event) {
 
     if (ctrl === true && event.key === "o") {
         event.preventDefault();
-        fileImport.click();
+        editorFileImport.click();
     }
 
     if (ctrl === true && event.key === "/") {
@@ -273,7 +331,6 @@ onkeydown = function (event) {
 /**
  * Releases control and shift keys
  */
-
 onkeyup = function (event) {
     if (event.key === "Control") {
         ctrl = false;
@@ -295,7 +352,7 @@ fileNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         fileNameDialog.close();
-        downloadCSV(fileNameInput.value || "notes.csv");
+        editorDownloadPSV(fileNameInput.value || "notes.csv");
     }
 }
 
@@ -308,4 +365,3 @@ function openShortcuts() {
     keyboardShortcutsDialog.showModal();
 }
 
-refreshEnterToAddNote();
