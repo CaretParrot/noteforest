@@ -51,12 +51,13 @@
                 <button onclick="pageGroup.changePage('editorPage')">Editor</button>
             </div>
             <div id="flashcards">
-                <button>&lt;-</button>
+                <button onclick="changeFlashcard(-1)">&lt;-</button>
                 <div id="flashcardsDisplay">
                     
                 </div>
-                <button>-&gt;</button>
+                <button onclick="changeFlashcard(1)">-&gt;</button>
             </div>
+            <label id="flashcardsProgress">?/?</label>
         </div>
     </body>
 </html>

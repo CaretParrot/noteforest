@@ -11,6 +11,7 @@ let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("
 let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboardShortcutsDialog"));
 let fileNameInput = /** @type {HTMLInputElement} */ (document.getElementById("fileNameInput"));
 let flashcardsDisplay = /** @type {HTMLDivElement} */ (document.getElementById("flashcardsDisplay"));
+let flashcardsProgress = /** @type {HTMLLabelElement} */ (document.getElementById("flashcardsProgress"));
 
 // @ts-expect-error
 let pageGroup = new PageGroup("page", "grid");
@@ -195,6 +196,8 @@ function editorReadFile() {
     }
 }
 
+let flashcardNumber = 1;
+
 /**
  * Splits CSV document into key value fields 
  * 
@@ -211,7 +214,49 @@ function flashcardParsePSV(text) {
         let definition = document.createElement("p");
         definition.innerHTML = lines[i].split("|")[3];
         flashcardsDisplay.appendChild(definition);
+
+        term.onclick = function () {
+            term.style.display = "none";
+            definition.style.display = "initial";
+        }
+
+        definition.onclick = function () {
+            definition.style.display = "none";
+            term.style.display = "initial";
+        }
     }
+
+    updateFlashcards();
+}
+
+function updateFlashcards() {
+    for (let i = 0; i < flashcardsDisplay.children.length; i++) {
+        // @ts-expect-error
+        flashcardsDisplay.children[i].style.display = "none";
+    }
+
+    // @ts-expect-error
+    flashcardsDisplay.children[2 * flashcardNumber - 2].style.display = "initial";
+
+    flashcardsProgress.innerHTML = `${flashcardNumber}/${flashcardsDisplay.children.length / 2}`;
+}
+
+/**
+ * 
+ * @param {number} amount 
+ */
+function changeFlashcard(amount) {
+    flashcardNumber += amount;
+
+    if (flashcardNumber > flashcardsDisplay.children.length / 2) {
+        flashcardNumber = 1;
+    }
+
+    if (flashcardNumber < 1) {
+        flashcardNumber = flashcardsDisplay.children.length / 2;
+    }
+
+    updateFlashcards();
 }
 
 /**

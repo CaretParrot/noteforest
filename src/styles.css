@@ -21,8 +21,12 @@ body {
     grid: auto / auto auto auto;
 }
 
-.page {
+#editorPage {
     grid: auto auto 1fr / 1fr;
+}
+
+#flashcardsPage {
+    grid: auto auto 1fr auto / 1fr;
 }
 
 #database-wrapper {
@@ -51,5 +55,14 @@ dialog::backdrop {
 
 #flashcards {
     grid: auto / auto 1fr auto;
+    height: 100%;
+    align-content: stretch;
+}
+
+#flashcardsDisplay {
+    align-content: stretch;
+}
+
+#flashcards * {
     height: 100%;
 }
