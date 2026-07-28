@@ -196,8 +196,6 @@ function editorReadFile() {
     }
 }
 
-let flashcardNumber = 1;
-
 /**
  * Splits CSV document into key value fields 
  * 
@@ -226,9 +224,14 @@ function flashcardParsePSV(text) {
         }
     }
 
+    flashcardsDisplay.dataset.number = "1";
+
     updateFlashcards();
 }
 
+/**
+ * Updates flashcard UI with the current number.
+ */
 function updateFlashcards() {
     for (let i = 0; i < flashcardsDisplay.children.length; i++) {
         // @ts-expect-error
@@ -236,9 +239,10 @@ function updateFlashcards() {
     }
 
     // @ts-expect-error
-    flashcardsDisplay.children[2 * flashcardNumber - 2].style.display = "initial";
+    flashcardsDisplay.children[2 * parseInt(flashcardsDisplay.dataset.number) - 2].style.display = "initial";
 
-    flashcardsProgress.innerHTML = `${flashcardNumber}/${flashcardsDisplay.children.length / 2}`;
+    // @ts-expect-error
+    flashcardsProgress.innerHTML = `${parseInt(flashcardsDisplay.dataset.number)}/${flashcardsDisplay.children.length / 2}`;
 }
 
 /**
@@ -246,14 +250,15 @@ function updateFlashcards() {
  * @param {number} amount 
  */
 function changeFlashcard(amount) {
-    flashcardNumber += amount;
+    // @ts-expect-error
+    flashcardsDisplay.dataset.number = String(parseInt(flashcardsDisplay.dataset.number) + amount);
 
-    if (flashcardNumber > flashcardsDisplay.children.length / 2) {
-        flashcardNumber = 1;
+    if (parseInt(flashcardsDisplay.dataset.number) > flashcardsDisplay.children.length / 2) {
+        flashcardsDisplay.dataset.number = "1";
     }
 
-    if (flashcardNumber < 1) {
-        flashcardNumber = flashcardsDisplay.children.length / 2;
+    if (parseInt(flashcardsDisplay.dataset.number) < 1) {
+        flashcardsDisplay.dataset.number = String(flashcardsDisplay.children.length / 2);
     }
 
     updateFlashcards();
@@ -409,4 +414,3 @@ function closeDialogs() {
 function openShortcuts() {
     keyboardShortcutsDialog.showModal();
 }
-
