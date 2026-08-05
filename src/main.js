@@ -213,6 +213,9 @@ function flashcardParsePSV(text) {
         definition.innerHTML = lines[i].split("|")[3];
         flashcardsDisplay.appendChild(definition);
 
+
+        term.dataset.retention = lines[i].split("|")[4] || "0";
+
         term.onclick = function () {
             term.style.display = "none";
             definition.style.display = "initial";
@@ -287,6 +290,17 @@ function flashcardReadFile() {
     if (file) {
         reader.readAsText(file);
     }
+}
+
+/**
+ * 
+ * @param {number} amount 
+ */
+function changeRetention(amount) {
+    // @ts-expect-error
+    flashcardsDisplay.children[2 * flashcardsDisplay.dataset.number - 2].dataset.retention = String(parseInt(flashcardsDisplay.children[2 * flashcardsDisplay.dataset.number - 2].dataset.retention) + amount);
+
+    changeFlashcard(1);
 }
 
 /**

@@ -2,30 +2,35 @@ body {
     height: 100%;
 }
 
-#toolbar {
+.toolbar {
     grid: auto / auto auto auto auto;
 }
 
-#toolbar,
+.toolbar,
 #flashcards-toolbar,
 .page,
-#flashcardsPage,
-#flashcards {
+#flashcards-page,
+#flashcards,
+#learn-confirm {
     background-color: transparent;
     padding: 0;
     margin: 0;
     border: none;
 }
 
+#learn-confirm {
+    grid: auto / 1fr 1fr;
+}
+
 #flashcards-toolbar {
     grid: auto / auto auto auto;
 }
 
-#editorPage {
+#editor-page {
     grid: auto auto 1fr / 1fr;
 }
 
-#flashcardsPage {
+#flashcards-page {
     grid: auto auto 1fr auto / 1fr;
 }
 
@@ -59,7 +64,7 @@ dialog::backdrop {
     align-content: stretch;
 }
 
-#flashcardsDisplay {
+#flashcards-display {
     align-content: stretch;
 }
 

@@ -15,13 +15,13 @@
     </head>
 
     <body>
-        <div id="editorPage" class="page">
+        <div id="editor-page" class="page">
             <h1>Editor</h1>
-            <div id="toolbar">
+            <div class="toolbar">
                 <input type="file" id="editorFileImport" accept=".csv,.txt">
                 <button id="saveButton">Save</button>
                 <button onclick="openShortcuts()">Shortcuts</button>
-                <button onclick="pageGroup.changePage('flashcardsPage')">Flashcards</button>
+                <button onclick="pageGroup.changePage('flashcards-page')">Flashcards</button>
             </div>
             <div id="database-wrapper">
                 <a class="label" data-parent="-1"></a>
@@ -43,21 +43,27 @@
                 <button onclick="closeDialogs()">Close</button>
             </dialog>
         </div>
-        <div id="flashcardsPage" class="page">
+        <div id="flashcards-page" class="page">
             <h1>Flashcards</h1>
-            <div id="toolbar">
+            <div class="toolbar">
                 <input type="file" id="flashcardFileImport" accept=".csv,.txt">
                 <button onclick="openShortcuts()">Shortcuts</button>
-                <button onclick="pageGroup.changePage('editorPage')">Editor</button>
+                <button onclick="pageGroup.changePage('editor-page')">Editor</button>
+                <button id="save-progress-button">Save</button>
             </div>
             <div id="flashcards">
                 <button onclick="changeFlashcard(-1)">&lt;-</button>
                 <div id="flashcardsDisplay" data-number="0">
-                    
+
                 </div>
                 <button onclick="changeFlashcard(1)">-&gt;</button>
+            </div>
+            <div id="learn-confirm">
+                <button onclick="changeRetention(1)">&#10003;</button>
+                <button onclick="changeRetention(-2)">&#10007;</button>
             </div>
             <label id="flashcardsProgress">?/?</label>
         </div>
     </body>
+
 </html>
