@@ -19,7 +19,7 @@ body {
 }
 
 #learn-confirm {
-    grid: auto / 1fr 1fr;
+    grid: auto / 1fr 1fr 1fr 1fr;
 }
 
 #flashcards-toolbar {

@@ -18,8 +18,8 @@
         <div id="editor-page" class="page">
             <h1>Editor</h1>
             <div class="toolbar">
-                <input type="file" id="editorFileImport" accept=".csv,.txt">
-                <button id="saveButton">Save</button>
+                <input type="file" id="editor-file-import" accept=".txt">
+                <button id="save-button">Save</button>
                 <button onclick="openShortcuts()">Shortcuts</button>
                 <button onclick="pageGroup.changePage('flashcards-page')">Flashcards</button>
             </div>
@@ -28,11 +28,11 @@
                 <input class="key" placeholder="Term" id="0-key">
                 <textarea class="value" placeholder="Definition" id="0-value"></textarea>
             </div>
-            <dialog id="fileNameDialog">
-                <input id="fileNameInput" type="text" placeholder="Name the file...">
+            <dialog id="file-name-dialog">
+                <input id="file-name-input" type="text" placeholder="Name the file...">
                 <button onclick="closeDialogs()">Close</button>
             </dialog>
-            <dialog id="keyboardShortcutsDialog">
+            <dialog id="keyboard-shortcuts-dialog">
                 <p>
                     Ctrl+s: Save To Disk<br>
                     Ctrl+o: Open File<br>
@@ -46,14 +46,14 @@
         <div id="flashcards-page" class="page">
             <h1>Flashcards</h1>
             <div class="toolbar">
-                <input type="file" id="flashcardFileImport" accept=".csv,.txt">
+                <input type="file" id="flashcard-file-import" accept=".csv,.txt">
                 <button onclick="openShortcuts()">Shortcuts</button>
-                <button onclick="pageGroup.changePage('editor-page')">Editor</button>
                 <button id="save-progress-button">Save</button>
+                <button onclick="pageGroup.changePage('editor-page')">Editor</button>
             </div>
             <div id="flashcards">
                 <button onclick="changeFlashcard(-1)">&lt;-</button>
-                <div id="flashcardsDisplay" data-number="0">
+                <div id="flashcards-display" data-number="0">
 
                 </div>
                 <button onclick="changeFlashcard(1)">-&gt;</button>
@@ -61,8 +61,13 @@
             <div id="learn-confirm">
                 <button onclick="changeRetention(1)">&#10003;</button>
                 <button onclick="changeRetention(-2)">&#10007;</button>
+                <label id="flashcards-progress">?/?</label>
+                <label id="flashcards-retention">?</label>
             </div>
-            <label id="flashcardsProgress">?/?</label>
+            <dialog id="save-progress-dialog">
+                <input id="save-name-input" type="text" placeholder="Name the file...">
+                <button onclick="closeDialogs()">Close</button>
+            </dialog>
         </div>
     </body>
 

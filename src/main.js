@@ -4,14 +4,18 @@ let database = document.getElementById("database-wrapper");
 let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 let notesValues = /** @type {HTMLCollectionOf<HTMLTextAreaElement>} */ (document.getElementsByClassName("value"));
 let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
-let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editorFileImport"));
-let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcardFileImport"));
-let saveButton = /** @type {HTMLButtonElement} */ (document.getElementById("saveButton"));
-let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("fileNameDialog"));
-let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboardShortcutsDialog"));
-let fileNameInput = /** @type {HTMLInputElement} */ (document.getElementById("fileNameInput"));
-let flashcardsDisplay = /** @type {HTMLDivElement} */ (document.getElementById("flashcardsDisplay"));
-let flashcardsProgress = /** @type {HTMLLabelElement} */ (document.getElementById("flashcardsProgress"));
+let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
+let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
+let saveButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-button"));
+let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("file-name-dialog"));
+let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboard-shortcuts-dialog"));
+let fileNameInput = /** @type {HTMLInputElement} */ (document.getElementById("file-name-input"));
+let flashcardsDisplay = /** @type {HTMLDivElement} */ (document.getElementById("flashcards-display"));
+let flashcardsProgress = /** @type {HTMLLabelElement} */ (document.getElementById("flashcards-progress"));
+let flashcardsRetention = /** @type {HTMLLabelElement} */ (document.getElementById("flashcards-retention"));
+let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-progress-button"));
+let saveProgressDialog = /** @type {HTMLDialogElement} */ (document.getElementById("save-progress-dialog"));
+let saveNameInput = /** @type {HTMLInputElement} */ (document.getElementById("save-name-input"));
 
 // @ts-expect-error
 let pageGroup = new PageGroup("page", "grid");
@@ -139,8 +143,6 @@ function refreshEnterToAddNote() {
     }
 }
 
-refreshEnterToAddNote();
-
 /**
  * Splits CSV document into key value fields 
  * 
@@ -160,6 +162,7 @@ function editorParsePSV(text) {
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].split("|")[1] !== "" && lines[i].split("|")[1] !== "-1") {
             notesLabels[i].dataset.parent = lines[i].split("|")[1];
+            notesLabels[i].dataset.retention = lines[i].split("|")[4];
             notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
             notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
         }
@@ -203,6 +206,7 @@ function editorReadFile() {
  */
 function flashcardParsePSV(text) {
     let lines = text.split("\n");
+    flashcardsDisplay.innerHTML = "";
 
     for (let i = 0; i < lines.length; i++) {
         let term = document.createElement("h1");
@@ -213,8 +217,8 @@ function flashcardParsePSV(text) {
         definition.innerHTML = lines[i].split("|")[3];
         flashcardsDisplay.appendChild(definition);
 
-
         term.dataset.retention = lines[i].split("|")[4] || "0";
+        term.dataset.parent = lines[i].split("|")[1] || "-1";
 
         term.onclick = function () {
             term.style.display = "none";
@@ -246,6 +250,9 @@ function updateFlashcards() {
 
     // @ts-expect-error
     flashcardsProgress.innerHTML = `${parseInt(flashcardsDisplay.dataset.number)}/${flashcardsDisplay.children.length / 2}`;
+
+    // @ts-expect-error
+    flashcardsRetention.innerHTML = flashcardsDisplay.children[2 * parseInt(flashcardsDisplay.dataset.number) - 2].dataset.retention;
 }
 
 /**
@@ -312,7 +319,7 @@ function editorGeneratePSV() {
     let csvText = "";
 
     for (let i = 0; i < notesKeys.length; i++) {
-        csvText += `${i}|${notesLabels[i].dataset.parent}|${notesKeys[i].value}|${notesValues[i].value}`;
+        csvText += `${i}|${notesLabels[i].dataset.parent}|${notesKeys[i].value}|${notesValues[i].value}|${notesLabels[i].dataset.retention || "0"}`;
         if (i !== notesKeys.length - 1) {
             csvText += `\n`;
         }
@@ -325,10 +332,16 @@ function editorGeneratePSV() {
  * Parses the key value fields as a CSV document and downloads the data
  * 
  * @param {string} fileName
+ * @param {string} context
  * @returns {void}
  */
-function editorDownloadPSV(fileName) {
-    let csvText = editorGeneratePSV();
+function downloadPSV(fileName, context) {
+    let csvText;
+    if (context === "editor") {
+        csvText = editorGeneratePSV();
+    } else {
+        csvText = flashcardGeneratePSV();
+    }
 
     let blob = new Blob([csvText], {
         type: "text/plain"
@@ -339,6 +352,25 @@ function editorDownloadPSV(fileName) {
     downloadLink.download = fileName;
     downloadLink.click();
     downloadLink.remove();
+}
+
+/**
+ * Generates CSV string from the key value fields
+ * 
+ * @returns {string}
+ */
+function flashcardGeneratePSV() {
+    let csvText = "";
+
+    for (let i = 0; i < flashcardsDisplay.children.length; i += 2) {
+        // @ts-expect-error
+        csvText += `${i / 2}|${flashcardsDisplay.children[i].dataset.parent}|${flashcardsDisplay.children[i].innerHTML}|${flashcardsDisplay.children[i + 1].innerHTML}|${flashcardsDisplay.children[i].dataset.retention}`;
+        if (i !== flashcardsDisplay.children.length - 2) {
+            csvText += `\n`;
+        }
+    }
+
+    return csvText;
 }
 
 editorFileImport.onclick = function () {
@@ -416,7 +448,18 @@ fileNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         fileNameDialog.close();
-        editorDownloadPSV(fileNameInput.value || "notes.csv");
+        downloadPSV(fileNameInput.value || "notes.txt", "editor");
+    }
+}
+
+/**
+ * @param {*} event 
+ */
+saveNameInput.onkeydown = function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        saveProgressDialog.close();
+        downloadPSV(saveNameInput.value || "notes.txt", "flashcards");
     }
 }
 
@@ -428,3 +471,9 @@ function closeDialogs() {
 function openShortcuts() {
     keyboardShortcutsDialog.showModal();
 }
+
+saveProgressButton.onclick = function () {
+    saveProgressDialog.showModal();
+}
+
+refreshEnterToAddNote();
