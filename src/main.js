@@ -162,13 +162,13 @@ function editorParsePSV(text) {
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].split("|")[1] !== "" && lines[i].split("|")[1] !== "-1") {
             notesLabels[i].dataset.parent = lines[i].split("|")[1];
-            notesLabels[i].dataset.retention = lines[i].split("|")[4];
             notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
             notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
         }
 
         notesKeys[i].value = lines[i].split("|")[2];
         notesValues[i].value = lines[i].split("|")[3];
+        notesLabels[i].dataset.retention = lines[i].split("|")[4];
     }
 
     refreshEnterToAddNote();
