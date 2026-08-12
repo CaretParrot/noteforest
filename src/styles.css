@@ -71,3 +71,7 @@ dialog::backdrop {
 #flashcards * {
     height: 100%;
 }
+
+#learn-confirm {
+    display: none;
+}

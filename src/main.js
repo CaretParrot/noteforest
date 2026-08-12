@@ -16,6 +16,7 @@ let flashcardsRetention = /** @type {HTMLLabelElement} */ (document.getElementBy
 let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-progress-button"));
 let saveProgressDialog = /** @type {HTMLDialogElement} */ (document.getElementById("save-progress-dialog"));
 let saveNameInput = /** @type {HTMLInputElement} */ (document.getElementById("save-name-input"));
+let learnConfirm = /** @type {HTMLDivElement} */ (document.getElementById("learn-confirm"));
 
 // @ts-expect-error
 let pageGroup = new PageGroup("page", "grid");
@@ -148,27 +149,27 @@ function refreshEnterToAddNote() {
  * 
  * @param {string} text 
  */
-function editorParsePSV(text) {
-    let lines = text.split("\n");
+function editorParseJSON(text) {
+    let object = JSON.parse(text);
 
     for (let i = notesKeys.length - 1; i > 0; i--) {
         removeNote(i);
     }
 
-    for (let i = 0; i < lines.length - 1; i++) {
+    for (let i = 0; i < object.length - 1; i++) {
         addNote();
     }
 
-    for (let i = 0; i < lines.length; i++) {
-        if (lines[i].split("|")[1] !== "" && lines[i].split("|")[1] !== "-1") {
-            notesLabels[i].dataset.parent = lines[i].split("|")[1];
+    for (let i = 0; i < object.length; i++) {
+        if (object[i]["parent"] !== "" && object[i]["parent"] !== "-1") {
+            notesLabels[i].dataset.parent = object[i]["parent"];
             notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
             notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
         }
 
-        notesKeys[i].value = lines[i].split("|")[2];
-        notesValues[i].value = lines[i].split("|")[3];
-        notesLabels[i].dataset.retention = lines[i].split("|")[4];
+        notesKeys[i].value = object[i]["key"];
+        notesValues[i].value = object[i]["value"];
+        notesLabels[i].dataset.retention = object[i]["retention"];
     }
 
     refreshEnterToAddNote();
@@ -191,7 +192,7 @@ function editorReadFile() {
     reader.addEventListener("load", () => {
         text = reader.result;
         // @ts-expect-error
-        editorParsePSV(text);
+        editorParseJSON(text);
     });
 
     if (file) {
@@ -204,21 +205,22 @@ function editorReadFile() {
  * 
  * @param {string} text 
  */
-function flashcardParsePSV(text) {
-    let lines = text.split("\n");
+function flashcardParseJSON(text) {
+    let object = JSON.parse(text);
+    console.log(object);
     flashcardsDisplay.innerHTML = "";
 
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < object.length; i++) {
         let term = document.createElement("h1");
-        term.innerHTML = lines[i].split("|")[2];
+        term.innerHTML = object[i]["key"];
         flashcardsDisplay.appendChild(term);
 
         let definition = document.createElement("p");
-        definition.innerHTML = lines[i].split("|")[3];
+        definition.innerHTML = object[i]["value"];
         flashcardsDisplay.appendChild(definition);
 
-        term.dataset.retention = lines[i].split("|")[4] || "0";
-        term.dataset.parent = lines[i].split("|")[1] || "-1";
+        term.dataset.retention = object[i]["retention"] || "0";
+        term.dataset.parent = object[i]["parent"] || "-1";
 
         term.onclick = function () {
             term.style.display = "none";
@@ -291,7 +293,7 @@ function flashcardReadFile() {
     reader.addEventListener("load", () => {
         text = reader.result;
         // @ts-expect-error
-        flashcardParsePSV(text);
+        flashcardParseJSON(text);
     });
 
     if (file) {
@@ -311,21 +313,24 @@ function changeRetention(amount) {
 }
 
 /**
- * Generates CSV string from the key value fields
+ * Generates JSON string from the key value fields
  * 
  * @returns {string}
  */
-function editorGeneratePSV() {
-    let csvText = "";
+function editorGenerateJSON() {
+    let json = [];
 
     for (let i = 0; i < notesKeys.length; i++) {
-        csvText += `${i}|${notesLabels[i].dataset.parent}|${notesKeys[i].value}|${notesValues[i].value}|${notesLabels[i].dataset.retention || "0"}`;
-        if (i !== notesKeys.length - 1) {
-            csvText += `\n`;
-        }
+        json.push({
+            "id": i,
+            "parent": notesLabels[i].dataset.parent || "-1",
+            "key": notesKeys[i].value,
+            "value": notesValues[i].value,
+            "retention": notesLabels[i].dataset.retention || "0"
+        });
     }
 
-    return csvText;
+    return JSON.stringify(json);
 }
 
 /**
@@ -338,13 +343,13 @@ function editorGeneratePSV() {
 function downloadPSV(fileName, context) {
     let csvText;
     if (context === "editor") {
-        csvText = editorGeneratePSV();
+        csvText = editorGenerateJSON();
     } else {
-        csvText = flashcardGeneratePSV();
+        csvText = flashcardGenerateJSON();
     }
 
     let blob = new Blob([csvText], {
-        type: "text/plain"
+        type: "application/json"
     });
 
     let downloadLink = document.createElement("a");
@@ -359,18 +364,22 @@ function downloadPSV(fileName, context) {
  * 
  * @returns {string}
  */
-function flashcardGeneratePSV() {
-    let csvText = "";
+function flashcardGenerateJSON() {
+    let json = [];
 
     for (let i = 0; i < flashcardsDisplay.children.length; i += 2) {
-        // @ts-expect-error
-        csvText += `${i / 2}|${flashcardsDisplay.children[i].dataset.parent}|${flashcardsDisplay.children[i].innerHTML}|${flashcardsDisplay.children[i + 1].innerHTML}|${flashcardsDisplay.children[i].dataset.retention}`;
-        if (i !== flashcardsDisplay.children.length - 2) {
-            csvText += `\n`;
-        }
+        json.push({
+            "id": i / 2,
+            // @ts-expect-error
+            "parent": flashcardsDisplay.children[i].dataset.parent || "-1",
+            "key": flashcardsDisplay.children[i].innerHTML,
+            "value": flashcardsDisplay.children[i + 1].innerHTML,
+            // @ts-expect-error
+            "retention": flashcardsDisplay.children[i].dataset.retention || "0"
+        });
     }
 
-    return csvText;
+    return JSON.stringify(json);
 }
 
 editorFileImport.onclick = function () {
@@ -387,6 +396,7 @@ editorFileImport.onchange = function () {
 
 flashcardFileImport.onchange = function () {
     flashcardReadFile();
+    learnConfirm.style.display = "grid";
 }
 
 /**
@@ -448,7 +458,7 @@ fileNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         fileNameDialog.close();
-        downloadPSV(fileNameInput.value || "notes.txt", "editor");
+        downloadPSV(fileNameInput.value || "notes.json", "editor");
     }
 }
 
@@ -459,7 +469,7 @@ saveNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         saveProgressDialog.close();
-        downloadPSV(saveNameInput.value || "notes.txt", "flashcards");
+        downloadPSV(saveNameInput.value || "notes.json", "flashcards");
     }
 }
 
