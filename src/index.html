@@ -52,15 +52,15 @@
                 <button onclick="pageGroup.changePage('editor-page')">Editor</button>
             </div>
             <div id="flashcards">
-                <button onclick="changeFlashcard(-1)">&lt;-</button>
+                <button onclick="Flashcards.changeFlashcard(-1)">&lt;-</button>
                 <div id="flashcards-display" data-number="0">
 
                 </div>
-                <button onclick="changeFlashcard(1)">-&gt;</button>
+                <button onclick="Flashcards.changeFlashcard(1)">-&gt;</button>
             </div>
             <div id="learn-confirm">
-                <button onclick="changeRetention(1)">&#10003;</button>
-                <button onclick="changeRetention(-2)">&#10007;</button>
+                <button onclick="Flashcards.changeRetention(1)">&#10003;</button>
+                <button onclick="Flashcards.changeRetention(-2)">&#10007;</button>
                 <label id="flashcards-progress">?/?</label>
                 <label id="flashcards-retention">?</label>
             </div>
