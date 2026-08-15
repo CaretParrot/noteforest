@@ -18,7 +18,7 @@ Built-in features include:
 
 # Prerequisites
 
-*Warning: As of writing, only pre-release versions of Noteworthy are available. As such, the code is not properly signed, and you may need to disable your operating system's warnings to install the program.*
+*Warning: As of writing, only pre-release versions of Noteworthy are available. As such, the code is not properly signed, and you may need to bypass your operating system's warnings to install the program.*
 
 - If not already done, install the following before proceeding:
     - [Node.js](https://nodejs.org/en)
