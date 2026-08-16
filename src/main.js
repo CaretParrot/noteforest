@@ -1,7 +1,7 @@
 // @ts-check
 // DOM Elements
 
-let database = document.getElementById("database-wrapper");
+let database = /** @type {HTMLDivElement} */ (document.getElementById("database-wrapper"));
 let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 let notesValues = /** @type {HTMLCollectionOf<HTMLTextAreaElement>} */ (document.getElementsByClassName("value"));
 let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
@@ -25,100 +25,39 @@ let pageGroup = new PageGroup("page", "grid");
 let ctrl = false;
 let shift = false;
 
-class Note {
-    #id;
-    #parentId;
-    #key;
-    #value;
-    #retention;
+class EditorNote extends HTMLElement {
+    constructor() {
+        super();
+    }
 
-    /**
-     * 
-     * @param {number} id 
-     * @param {number} parentId 
-     * @param {string} key 
-     * @param {string} value 
-     * @param {number} retention 
-     */
-    constructor(id, parentId, key, value, retention) {
-        this.#id = id;
-        this.#parentId = parentId;
-        this.#key = key;
-        this.#value = value;
-        this.#retention = retention;
+    static get observedAttributes() {
+        return ["parentIndex", "retention"];
     }
 
     toJSON() {
         return {
-            id: this.#id,
-            parentId: this.#parentId,
-            key: this.#key,
-            value: this.#value,
-            retention: this.#retention
+            index: this.dataset.index,
+            parentIndex: this.dataset.parentIndex,
+            // @ts-expect-error
+            key: this.children[1].value,
+            // @ts-expect-error
+            value: this.children[2].value,
+            retention: this.dataset.retention
         }
     }
 
-    get id() {
-        return this.#id;
-    }
-
-    set id(id) {
-        this.#id = id;
-    }
-
-    get parentId() {
-        return this.#parentId;
-    }
-
-    set parentId(parentId) {
-        this.#parentId = parentId;
-    }
-
-    get key() {
-        return this.#key;
-    }
-
-    set key(key) {
-        this.#key = key;
-    }
-
-    get value() {
-        return this.#value;
-    }
-
-    set value(value) {
-        this.#value = value;
-    }
-
-    get retention() {
-        return this.#retention;
-    }
-
-    set retention(retention) {
-        this.#retention = retention;
-    }
-}
-
-class Editor {
-    constructor() {}
-
-    /**
-     * Appends new key value fields to the end of the document
-     * 
-     * @param {number} parentIndex
-     * @returns {void}
-     */
-    static addNote(parentIndex = -1) {
+    connectedCallback() {
         // Creates label to link to parent if available
         let newLabel = document.createElement("a");
         newLabel.classList.add("label");
 
-        newLabel.dataset.parent = String(parentIndex);
+        newLabel.dataset.parent = String(this.dataset.parentIndex);
 
         // Adds a link back to the parent note if it is a linked note.
-        if (parentIndex !== -1) {
-            newLabel.innerHTML = notesKeys[parentIndex].value;
-            newLabel.href = `#${parentIndex}-key`;
+        if (this.dataset.parentIndex !== "-1") {
+            // @ts-expect-error
+            newLabel.innerHTML = notesKeys[parseInt(this.dataset.parentIndex)].value;
+            newLabel.href = `#${this.dataset.parentIndex}-key`;
         }
 
         // Creates new key field
@@ -134,13 +73,55 @@ class Editor {
         newValue.id = `${notesValues.length}-value`;
 
         // Add both input fields and the label to the wrapper element
-        document.getElementById("database-wrapper")?.appendChild(newLabel);
-        document.getElementById("database-wrapper")?.appendChild(newKey);
-        document.getElementById("database-wrapper")?.appendChild(newValue);
+        this.appendChild(newLabel);
+        this.appendChild(newKey);
+        this.appendChild(newValue);
+
 
         // Set focus to the new key field, then refresh keybinds
         newKey.focus();
         Editor.refreshEnterToAddNote();
+    }
+
+    disconnectedCallback() {
+        // If a linked note points back to the note being removed, remove the linking
+        for (let i = 0; i < notesLabels.length; i++) {
+            if (notesLabels[i].dataset.parent === this.dataset.index) {
+                notesLabels[i].innerHTML = "";
+                notesLabels[i].href = "";
+                notesLabels[i].style.pointerEvents = "none";
+                notesLabels[i].dataset.parent = "-1";
+            }
+        }
+
+        // Set the focus to the previous value field, then refresh keybinds
+        try {
+            notesValues[notesValues.length - 1].focus();
+        }
+        catch (error) {
+            if (error !== TypeError) {
+                throw error;
+            }
+        }
+
+        Editor.refreshEnterToAddNote();
+    }
+}
+
+customElements.define("editor-note", EditorNote);
+
+class Editor {
+    /**
+     * Appends new key value fields to the end of the document
+     * 
+     * @param {number} parentIndex
+     * @returns {void}
+     */
+    static addNote(parentIndex = -1) {
+        let newNote = document.createElement("editor-note");
+        newNote.dataset.parentIndex = String(parentIndex);
+        newNote.dataset.retention = "0";
+        database.appendChild(newNote);
     }
 
     /**
@@ -150,31 +131,7 @@ class Editor {
      * @returns {void}
      */
     static removeNote(index) {
-        // If a linked note points back to the note being removed, remove the linking
-        for (let i = 0; i < notesLabels.length; i++) {
-            if (notesLabels[i].dataset.parent === String(index)) {
-                notesLabels[i].innerHTML = "";
-                notesLabels[i].href = "";
-                notesLabels[i].style.pointerEvents = "none";
-                notesLabels[i].dataset.parent = "-1";
-            }
-        }
-
-        // Remove both fields and the label
-        notesLabels[index].remove();
-        notesValues[index].remove();
-        notesKeys[index].remove();
-
-        // Set the focus to the previous value field, then refresh keybinds
-        try {
-            notesValues[index - 1].focus();
-        }
-        catch (error) {
-            if (error !== TypeError) {
-                throw error;
-            }
-        }
-        Editor.refreshEnterToAddNote();
+        database.children[index].remove();
     }
 
     /**
@@ -229,15 +186,10 @@ class Editor {
      */
     static generateJSON() {
         let json = [];
+        let allNotes = /** @type {HTMLCollectionOf<EditorNote>} */ (document.getElementsByTagName("editor-note"));
 
         for (let i = 0; i < notesKeys.length; i++) {
-            json.push({
-                "id": i,
-                "parent": notesLabels[i].dataset.parent || "-1",
-                "key": notesKeys[i].value,
-                "value": notesValues[i].value,
-                "retention": notesLabels[i].dataset.retention || "0"
-            });
+            json.push(allNotes[i].toJSON());
         }
 
         return JSON.stringify(json);
@@ -249,26 +201,28 @@ class Editor {
      * @param {string} text 
      */
     static parseJSON(text) {
-        let object = JSON.parse(text);
+        let json = JSON.parse(text);
 
         for (let i = notesKeys.length - 1; i > 0; i--) {
             Editor.removeNote(i);
         }
 
-        for (let i = 0; i < object.length - 1; i++) {
+        for (let i = 0; i < json.length - 1; i++) {
             Editor.addNote();
         }
 
-        for (let i = 0; i < object.length; i++) {
-            if (object[i]["parent"] !== "" && object[i]["parent"] !== "-1") {
-                notesLabels[i].dataset.parent = object[i]["parent"];
+        let allNotes = document.getElementsByTagName("editor-note");
+
+        for (let i = 0; i < json.length; i++) {
+            if (json[i]["parent"] !== "" && json[i]["parent"] !== "-1") {
+                notesLabels[i].dataset.parent = json[i]["parent"];
                 notesLabels[i].href = `#${notesLabels[i].dataset.parent}-key`;
                 notesLabels[i].innerHTML = notesKeys[parseInt(/** @type {string} */(notesLabels[i].dataset.parent))].value;
             }
 
-            notesKeys[i].value = object[i]["key"];
-            notesValues[i].value = object[i]["value"];
-            notesLabels[i].dataset.retention = object[i]["retention"];
+            notesKeys[i].value = json[i]["key"];
+            notesValues[i].value = json[i]["value"];
+            notesLabels[i].dataset.retention = json[i]["retention"];
         }
 
         Editor.refreshEnterToAddNote();
@@ -302,7 +256,7 @@ class Editor {
 
 class Flashcards {
     constructor() { }
-    
+
     /**
      * Generates CSV string from the key value fields
      * 
@@ -333,7 +287,6 @@ class Flashcards {
      */
     static parseJSON(text) {
         let object = JSON.parse(text);
-        console.log(object);
         flashcardsDisplay.innerHTML = "";
 
         for (let i = 0; i < object.length; i++) {
@@ -569,4 +522,5 @@ saveProgressButton.onclick = function () {
     saveProgressDialog.showModal();
 }
 
+Editor.addNote();
 Editor.refreshEnterToAddNote();
