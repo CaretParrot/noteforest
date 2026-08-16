@@ -1,3 +1,4 @@
+// @ts-check
 // DOM Elements
 
 let database = document.getElementById("database-wrapper");
@@ -23,6 +24,80 @@ let pageGroup = new PageGroup("page", "grid");
 
 let ctrl = false;
 let shift = false;
+
+class Note {
+    #id;
+    #parentId;
+    #key;
+    #value;
+    #retention;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {number} parentId 
+     * @param {string} key 
+     * @param {string} value 
+     * @param {number} retention 
+     */
+    constructor(id, parentId, key, value, retention) {
+        this.#id = id;
+        this.#parentId = parentId;
+        this.#key = key;
+        this.#value = value;
+        this.#retention = retention;
+    }
+
+    toJSON() {
+        return {
+            id: this.#id,
+            parentId: this.#parentId,
+            key: this.#key,
+            value: this.#value,
+            retention: this.#retention
+        }
+    }
+
+    get id() {
+        return this.#id;
+    }
+
+    set id(id) {
+        this.#id = id;
+    }
+
+    get parentId() {
+        return this.#parentId;
+    }
+
+    set parentId(parentId) {
+        this.#parentId = parentId;
+    }
+
+    get key() {
+        return this.#key;
+    }
+
+    set key(key) {
+        this.#key = key;
+    }
+
+    get value() {
+        return this.#value;
+    }
+
+    set value(value) {
+        this.#value = value;
+    }
+
+    get retention() {
+        return this.#retention;
+    }
+
+    set retention(retention) {
+        this.#retention = retention;
+    }
+}
 
 class Editor {
     constructor() {}
