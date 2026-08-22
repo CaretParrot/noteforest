@@ -38,20 +38,22 @@ class EditorNote extends HTMLElement {
      */
     toJSON() {
         return {
-            index: parseInt(this.id),
+            index: +this.id,
             // @ts-expect-error
-            parentIndex: parseInt(this.dataset.parentIndex),
+            parentIndex: +this.dataset.parentIndex,
             // @ts-expect-error
             key: this.children[1].value,
             // @ts-expect-error
             value: this.children[2].value,
             // @ts-expect-error
-            retention: parseInt(this.dataset.retention)
+            retention: +this.dataset.retention
         }
     }
 
     /**
      * Creates a label field within the note wrapper. Adds a link back to the parent note if the label does not exist.
+     * 
+     * @returns {HTMLAnchorElement}
      */
     createLabelField() {
         let newLabel = document.createElement("a");
@@ -64,10 +66,13 @@ class EditorNote extends HTMLElement {
         }
 
         this.appendChild(newLabel);
+        return newLabel;
     }
 
     /**
      * Creates a new key field within the note wrapper.
+     * 
+     * @return {HTMLInputElement}
      */
     createKeyField() {
         let newKey = document.createElement("input");
@@ -76,12 +81,14 @@ class EditorNote extends HTMLElement {
         // @ts-expect-error
         newKey.value = this.dataset.key;
         this.appendChild(newKey);
-
         this.dataset.key = "";
+        return newKey;
     }
 
     /**
      * Creates a new value field within the note wrapper.
+     * 
+     * @returns {HTMLTextAreaElement}
      */
     createValueField() {
         let newValue = document.createElement("textarea");
@@ -90,8 +97,8 @@ class EditorNote extends HTMLElement {
         // @ts-expect-error
         newValue.value = this.dataset.value;
         this.appendChild(newValue);
-
         this.dataset.value = "";
+        return newValue;
     }
 
     /**
@@ -162,7 +169,7 @@ class EditorNote extends HTMLElement {
             // ctrl+enter: Add a linked note
             if (ctrl && !shift && event.key === "Enter") {
                 event.preventDefault();
-                EditorPage.addNote(parseInt(this.id));
+                EditorPage.addNote(+this.id);
             }
 
             // Remove empty fields when hitting backspace on value fields
@@ -175,7 +182,66 @@ class EditorNote extends HTMLElement {
     }
 }
 
-customElements.define("editor-note", EditorNote);
+class FlashcardNote extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    /**
+     * Returns the properties of the note to compile into a JSON file.
+     * 
+     * @returns {object}
+     */
+    toJSON() {
+        return {
+            index: +this.id,
+            // @ts-expect-error
+            parentIndex: +this.dataset.parentIndex,
+            key: this.children[0].innerHTML,
+            value: this.children[1].innerHTML,
+            // @ts-expect-error
+            retention: +this.dataset.retention
+        }
+    }
+
+    createKeyCard() {
+        let newKey = document.createElement("h1");
+        // @ts-expect-error
+        newKey.innerHTML = this.dataset.key;
+        newKey.style.display = "none";
+        this.appendChild(newKey);
+        return newKey;
+    }
+
+    createValueCard() {
+        let newValue = document.createElement("p");
+        // @ts-expect-error
+        newValue.innerHTML = this.dataset.value;
+        newValue.style.display = "none";
+        this.appendChild(newValue);
+        return newValue;
+    }
+
+    /**
+     * Creates the sub-elements and loads their properties.
+     */
+    connectedCallback() {
+        this.id = String(Array.prototype.indexOf.call(this.parentNode?.children, this));
+
+        let newKey = this.createKeyCard();
+        let newValue = this.createValueCard();
+
+        newKey.onclick = function () {
+            newKey.style.display = "none";
+            newValue.style.display = "block";
+        }
+
+        newValue.onclick = function () {
+            newValue.style.display = "none";
+            newKey.style.display = "block";
+        }
+    }
+}
 
 class EditorPage {
     /**
@@ -289,19 +355,9 @@ class EditorPage {
     }
 }
 
-class FlashcardNote extends HTMLElement {
-    constructor() {
-        super();
-    }
-
-    toJSON() {
-
-    }
-}
-
 class FlashcardsPage {
     /**
-     * Generates CSV string from the key value fields
+     * Generates JSON string from the key value fields
      * 
      * @returns {string}
      */
@@ -315,36 +371,28 @@ class FlashcardsPage {
         return JSON.stringify(json);
     }
 
+    static addCard(parentIndex = -1, key = "", value = "", retention = 0) {
+        let newCard = document.createElement("flashcard-note");
+
+        newCard.dataset.parentIndex = String(parentIndex);
+        newCard.dataset.key = key;
+        newCard.dataset.value = value;
+        newCard.dataset.retention = String(retention);
+
+        flashcardsDisplay.appendChild(newCard);
+    }
+
     /**
      * Splits CSV document into key value fields 
      * 
      * @param {string} text 
      */
-    static parseJSON(text) {
-        let object = JSON.parse(text);
+    static loadJSON(text) {
+        let json = JSON.parse(text);
         flashcardsDisplay.innerHTML = "";
 
-        for (let i = 0; i < object.length; i++) {
-            let term = document.createElement("h1");
-            term.innerHTML = object[i]["key"];
-            flashcardsDisplay.appendChild(term);
-
-            let definition = document.createElement("p");
-            definition.innerHTML = object[i]["value"];
-            flashcardsDisplay.appendChild(definition);
-
-            term.dataset.retention = object[i]["retention"] || "0";
-            term.dataset.parent = object[i]["parent"] || "-1";
-
-            term.onclick = function () {
-                term.style.display = "none";
-                definition.style.display = "initial";
-            }
-
-            definition.onclick = function () {
-                definition.style.display = "none";
-                term.style.display = "initial";
-            }
+        for (let i = 0; i < json.length; i++) {
+            FlashcardsPage.addCard(json[i]["parentIndex"], json[i]["key"], json[i]["value"], json[i]["retention"]);
         }
 
         flashcardsDisplay.dataset.number = "1";
@@ -358,17 +406,20 @@ class FlashcardsPage {
     static updateFlashcards() {
         for (let i = 0; i < flashcardsDisplay.children.length; i++) {
             // @ts-expect-error
+            flashcardsDisplay.children[i].children[0].style.display = "none";
+            // @ts-expect-error
+            flashcardsDisplay.children[i].children[1].style.display = "none";
+            // @ts-expect-error
             flashcardsDisplay.children[i].style.display = "none";
         }
 
         // @ts-expect-error
-        flashcardsDisplay.children[2 * parseInt(flashcardsDisplay.dataset.number) - 2].style.display = "initial";
-
+        flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].style.display = "initial";
         // @ts-expect-error
-        flashcardsProgress.innerHTML = `${parseInt(flashcardsDisplay.dataset.number)}/${flashcardsDisplay.children.length / 2}`;
-
+        flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].children[0].style.display = "block";
+        flashcardsProgress.innerHTML = `${flashcardsDisplay.dataset.number}/${flashcardsDisplay.children.length}`;
         // @ts-expect-error
-        flashcardsRetention.innerHTML = flashcardsDisplay.children[2 * parseInt(flashcardsDisplay.dataset.number) - 2].dataset.retention;
+        flashcardsRetention.innerHTML = flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.retention;
     }
 
     /**
@@ -377,14 +428,14 @@ class FlashcardsPage {
      */
     static changeFlashcard(amount) {
         // @ts-expect-error
-        flashcardsDisplay.dataset.number = String(parseInt(flashcardsDisplay.dataset.number) + amount);
+        flashcardsDisplay.dataset.number = String(+flashcardsDisplay.dataset.number + amount);
 
-        if (parseInt(flashcardsDisplay.dataset.number) > flashcardsDisplay.children.length / 2) {
+        if (+flashcardsDisplay.dataset.number > flashcardsDisplay.children.length) {
             flashcardsDisplay.dataset.number = "1";
         }
 
-        if (parseInt(flashcardsDisplay.dataset.number) < 1) {
-            flashcardsDisplay.dataset.number = String(flashcardsDisplay.children.length / 2);
+        if (+flashcardsDisplay.dataset.number < 1) {
+            flashcardsDisplay.dataset.number = String(flashcardsDisplay.children.length);
         }
 
         FlashcardsPage.updateFlashcards();
@@ -407,7 +458,7 @@ class FlashcardsPage {
         reader.addEventListener("load", () => {
             text = reader.result;
             // @ts-expect-error
-            flashcardsPage.parseJSON(text);
+            FlashcardsPage.loadJSON(text);
         });
 
         if (file) {
@@ -421,14 +472,17 @@ class FlashcardsPage {
      */
     static changeRetention(amount) {
         // @ts-expect-error
-        flashcardsDisplay.children[2 * flashcardsDisplay.dataset.number - 2].dataset.retention = String(parseInt(flashcardsDisplay.children[2 * flashcardsDisplay.dataset.number - 2].dataset.retention) + amount);
+        flashcardsDisplay.children[flashcardsDisplay.dataset.number - 1].dataset.retention = String(+flashcardsDisplay.children[flashcardsDisplay.dataset.number - 1].dataset.retention + amount);
 
         FlashcardsPage.changeFlashcard(1);
     }
 }
 
+customElements.define("editor-note", EditorNote);
+customElements.define("flashcard-note", FlashcardNote);
+
 /**
- * Parses the key value fields as a CSV document and downloads the data
+ * Parses the key value fields as a JSON document and downloads the data
  * 
  * @param {string} fileName
  * @param {string} context
