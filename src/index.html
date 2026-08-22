@@ -24,9 +24,7 @@
                 <button onclick="pageGroup.changePage('flashcards-page')">Flashcards</button>
             </div>
             <div id="database-wrapper">
-                <a class="label" data-parent="-1"></a>
-                <input class="key" placeholder="Term" id="0-key">
-                <textarea class="value" placeholder="Definition" id="0-value"></textarea>
+                
             </div>
             <dialog id="file-name-dialog">
                 <input id="file-name-input" type="text" placeholder="Name the file...">
@@ -52,15 +50,15 @@
                 <button onclick="pageGroup.changePage('editor-page')">Editor</button>
             </div>
             <div id="flashcards">
-                <button onclick="Flashcards.changeFlashcard(-1)">&lt;-</button>
+                <button onclick="FlashcardsPage.changeFlashcard(-1)">&lt;-</button>
                 <div id="flashcards-display" data-number="0">
 
                 </div>
-                <button onclick="Flashcards.changeFlashcard(1)">-&gt;</button>
+                <button onclick="FlashcardsPage.changeFlashcard(1)">-&gt;</button>
             </div>
             <div id="learn-confirm">
-                <button onclick="Flashcards.changeRetention(1)">&#10003;</button>
-                <button onclick="Flashcards.changeRetention(-2)">&#10007;</button>
+                <button onclick="FlashcardsPage.changeRetention(1)">&#10003;</button>
+                <button onclick="FlashcardsPage.changeRetention(-2)">&#10007;</button>
                 <label id="flashcards-progress">?/?</label>
                 <label id="flashcards-retention">?</label>
             </div>
