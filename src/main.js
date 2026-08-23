@@ -40,7 +40,7 @@ class EditorNote extends HTMLElement {
         return {
             index: +this.id,
             // @ts-expect-error
-            parentIndex: +this.dataset.parentIndex,
+            parentId: +this.dataset.parentId,
             // @ts-expect-error
             key: this.children[1].value,
             // @ts-expect-error
@@ -59,10 +59,10 @@ class EditorNote extends HTMLElement {
         let newLabel = document.createElement("a");
         newLabel.classList.add("label");
 
-        if (this.dataset.parentIndex !== "-1") {
+        if (this.dataset.parentId !== "-1") {
             // @ts-expect-error
-            newLabel.innerHTML = document.getElementById(this.dataset.parentIndex).children[1].value;
-            newLabel.href = `#${this.dataset.parentIndex}`;
+            newLabel.innerHTML = document.getElementById(this.dataset.parentId).children[1].value;
+            newLabel.href = `#${this.dataset.parentId}`;
         }
 
         this.appendChild(newLabel);
@@ -169,7 +169,8 @@ class EditorNote extends HTMLElement {
             // ctrl+enter: Add a linked note
             if (ctrl && !shift && event.key === "Enter") {
                 event.preventDefault();
-                EditorPage.addNote(+this.id);
+                // @ts-expect-error
+                EditorPage.addNote(+this.parentElement.id);
             }
 
             // Remove empty fields when hitting backspace on value fields
@@ -196,7 +197,7 @@ class FlashcardNote extends HTMLElement {
         return {
             index: +this.id,
             // @ts-expect-error
-            parentIndex: +this.dataset.parentIndex,
+            parentId: +this.dataset.parentId,
             key: this.children[0].innerHTML,
             value: this.children[1].innerHTML,
             // @ts-expect-error
@@ -247,16 +248,16 @@ class EditorPage {
     /**
      * Appends new key value fields to the end of the document.
      * 
-     * @param {number} parentIndex
+     * @param {number} parentId
      * @param {string} key
      * @param {string} value
      * @param {number} retention
      * @returns {void}
      */
-    static addNote(parentIndex = -1, key = "", value = "", retention = 0) {
+    static addNote(parentId = -1, key = "", value = "", retention = 0) {
         let newNote = /** @type {EditorNote} */ (document.createElement("editor-note"));
 
-        newNote.dataset.parentIndex = String(parentIndex);
+        newNote.dataset.parentId = String(parentId);
         newNote.dataset.key = key;
         newNote.dataset.value = value;
         newNote.dataset.retention = String(retention);
@@ -287,7 +288,7 @@ class EditorPage {
         for (let i = 0; i < notesKeys.length; i++) {
             notesKeys[i].oninput = function () {
                 for (let j = 0; j < notesLabels.length; j++) {
-                    if (editorNotes[j].dataset.parentIndex === String(i)) {
+                    if (editorNotes[j].dataset.parentId === String(i)) {
                         notesLabels[j].innerHTML = notesKeys[i].value;
                     }
                 }
@@ -323,7 +324,7 @@ class EditorPage {
         }
 
         for (let i = 0; i < json.length; i++) {
-            EditorPage.addNote(json[i]["parentIndex"], json[i]["key"], json[i]["value"], json[i]["retention"]);
+            EditorPage.addNote(json[i]["parentId"], json[i]["key"], json[i]["value"], json[i]["retention"]);
         }
 
         EditorPage.refreshLabelUpdating();
@@ -371,10 +372,10 @@ class FlashcardsPage {
         return JSON.stringify(json);
     }
 
-    static addCard(parentIndex = -1, key = "", value = "", retention = 0) {
+    static addCard(parentId = -1, key = "", value = "", retention = 0) {
         let newCard = document.createElement("flashcard-note");
 
-        newCard.dataset.parentIndex = String(parentIndex);
+        newCard.dataset.parentId = String(parentId);
         newCard.dataset.key = key;
         newCard.dataset.value = value;
         newCard.dataset.retention = String(retention);
@@ -392,7 +393,7 @@ class FlashcardsPage {
         flashcardsDisplay.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            FlashcardsPage.addCard(json[i]["parentIndex"], json[i]["key"], json[i]["value"], json[i]["retention"]);
+            FlashcardsPage.addCard(json[i]["parentId"], json[i]["key"], json[i]["value"], json[i]["retention"]);
         }
 
         flashcardsDisplay.dataset.number = "1";
