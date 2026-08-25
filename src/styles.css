@@ -89,3 +89,7 @@ dialog::backdrop {
 #learn-confirm {
     display: none;
 }
+
+textarea {
+    white-space: pre;
+}
