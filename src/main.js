@@ -38,7 +38,7 @@ class EditorNote extends HTMLElement {
      */
     toJSON() {
         return {
-            index: +this.id,
+            id: +this.id,
             // @ts-expect-error
             parentId: +this.dataset.parentId,
             // @ts-expect-error
@@ -195,7 +195,7 @@ class FlashcardNote extends HTMLElement {
      */
     toJSON() {
         return {
-            index: +this.id,
+            id: +this.id,
             // @ts-expect-error
             parentId: +this.dataset.parentId,
             key: this.children[0].innerHTML,
