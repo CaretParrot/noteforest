@@ -38,7 +38,7 @@ class EditorNote extends HTMLElement {
      */
     toJSON() {
         return {
-            index: +this.id,
+            id: +this.id,
             // @ts-expect-error
             parentId: +this.dataset.parentId,
             // @ts-expect-error
@@ -121,10 +121,10 @@ class EditorNote extends HTMLElement {
     /**
      * Checks for any notes that link back to the note and removes their linking.
      */
-    removeAllLinkedNotes() {
+    removeAllChildNotes() {
         // If a linked note points back to the note being removed, remove the linking
         for (let i = 0; i < editorNotes.length; i++) {
-            if (editorNotes[i].dataset.parent === this.dataset.index) {
+            if (editorNotes[i].dataset.parent === this.id) {
                 EditorPage.removeLinking(editorNotes[i]);
             }
         }
@@ -134,7 +134,7 @@ class EditorNote extends HTMLElement {
      * Removes all linked notes and attempts to focus the previous element.
      */
     disconnectedCallback() {
-        this.removeAllLinkedNotes();
+        this.removeAllChildNotes();
 
         if (editorNotes.length > 1) {
             // @ts-expect-error
@@ -195,7 +195,7 @@ class FlashcardNote extends HTMLElement {
      */
     toJSON() {
         return {
-            index: +this.id,
+            id: +this.id,
             // @ts-expect-error
             parentId: +this.dataset.parentId,
             key: this.children[0].innerHTML,

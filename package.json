@@ -9,5 +9,8 @@
   "devDependencies": {
     "@tauri-apps/cli": "^2",
     "jest": "^30.4.2"
+  },
+  "dependencies": {
+    "@tauri-apps/plugin-fs": "^2.5.1"
   }
 }

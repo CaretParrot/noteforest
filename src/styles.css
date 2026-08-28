@@ -49,6 +49,10 @@ flashcard-note * {
     height: 100%;
 }
 
+flashcard-note p {
+    white-space: pre;
+}
+
 #database-wrapper {
     height: 100%;
 }
@@ -88,4 +92,8 @@ dialog::backdrop {
 
 #learn-confirm {
     display: none;
+}
+
+textarea {
+    white-space: pre;
 }
