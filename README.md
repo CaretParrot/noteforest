@@ -1,8 +1,8 @@
-# Noteworthy
+# NoteForest
 
-Noteworthy is a simple note-taking and flashcard application designed to be fast and easy to use. In addition to the standard term-and-definition input, notes may be "linked" back to a parent note. This allows for the easy creation of trees and mind maps. 
+NoteForest is a simple note-taking and flashcard application designed to be fast and easy to use. In addition to the standard term-and-definition input, notes may be "linked" back to a parent note. This allows for the easy creation of trees and mind maps. 
 
-Noteworthy is open source, uses open file formats, and requires no Internet connection, allowing you to edit and review your notes wherever you go. You're never locked in!
+NoteForest is open source, uses open file formats, and requires no Internet connection, allowing you to edit and review your notes wherever you go. You're never locked in!
 
 Built-in features include:
 - Term/definition editor
@@ -18,7 +18,7 @@ Built-in features include:
 
 # Prerequisites
 
-*Warning: As of writing, only pre-release versions of Noteworthy are available. As such, the code is not properly signed, and you may need to bypass your operating system's warnings to install the program.*
+*Warning: As of writing, only pre-release versions of NoteForest are available. As such, the code is not properly signed, and you may need to bypass your operating system's warnings to install the program.*
 
 - If not already done, install the following before proceeding:
     - [Node.js](https://nodejs.org/en)
@@ -39,7 +39,7 @@ Built-in features include:
 - Type in terms in the smaller boxes and definitions in the larger boxes.
 - Hit Enter on a **definition** to add a new pair.
 - Use the save button to save the file.
-    - Noteworthy uses a JSON array to store your notes, allowing you to edit the file freely outside the built-in editor.
+    - NoteForest uses a JSON array to store your notes, allowing you to edit the file freely outside the built-in editor.
 - Click on the shortcuts button to see a list of shortcuts.
 
 ## Flashcards
