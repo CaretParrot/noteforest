@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "noteworthy",
+  "productName": "NoteForest",
   "version": "0.1.0",
-  "identifier": "com.caretparrot.noteworthy",
+  "identifier": "com.caretparrot.noteforest",
   "build": {
     "frontendDist": "../src"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "noteworthy",
+        "title": "NoteForest",
         "width": 800,
         "height": 600
       }
