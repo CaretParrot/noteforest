@@ -6,6 +6,7 @@ import { EditorNote, FlashcardNote } from "./custom-elements.js";
 
 let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("file-name-dialog"));
 let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboard-shortcuts-dialog"));
+let saveProgressDialog = /** @type {HTMLDialogElement} */ (document.getElementById("save-progress-dialog"));
 
 // Editor page
 
@@ -310,8 +311,10 @@ export class FlashcardsPage {
 export function closeDialogs() {
     fileNameDialog.close();
     keyboardShortcutsDialog.close();
+    saveProgressDialog.close();
 }
 
 export function openShortcuts() {
+    console.log("Hello!");
     keyboardShortcutsDialog.showModal();
 }

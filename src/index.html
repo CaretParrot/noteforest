@@ -23,53 +23,53 @@
             <div class="toolbar">
                 <input type="file" id="editor-file-import" accept=".json">
                 <button id="save-button">Save</button>
-                <button onclick="openShortcuts()">Shortcuts</button>
-                <button class="to-flashcards-page">Flashcards</button>
+                <button class="open-shortcuts-button">Shortcuts</button>
+                <button class="to-flashcards-page">Flashcards -&gt;</button>
             </div>
             <div id="database-wrapper">
 
             </div>
             <dialog id="file-name-dialog">
                 <input id="file-name-input" type="text" placeholder="Name the file...">
-                <button onclick="closeDialogs()">Close</button>
-            </dialog>
-            <dialog id="keyboard-shortcuts-dialog">
-                <p>
-                    Ctrl+s: Save To Disk<br>
-                    Ctrl+o: Open File<br>
-                    Shift+Enter: Add New Line Within Definition<br>
-                    Ctrl+Enter: Add Linked Note<br>
-                    Ctrl+/: Open Shortcuts
-                </p>
-                <button onclick="closeDialogs()">Close</button>
+                <button class="close-button">Close</button>
             </dialog>
         </div>
         <div id="flashcards-page" class="page">
             <h1>Flashcards</h1>
             <div class="toolbar">
                 <input type="file" id="flashcard-file-import" accept=".json">
-                <button onclick="openShortcuts()">Shortcuts</button>
                 <button id="save-progress-button">Save</button>
-                <button class="to-editor-page">Editor</button>
+                <button class="open-shortcuts-button">Shortcuts</button>
+                <button class="to-editor-page">Editor -&gt;</button>
             </div>
             <div id="flashcards">
-                <button onclick="FlashcardsPage.changeFlashcard(-1)">&lt;-</button>
+                <button id="previous-button">&lt;-</button>
                 <div id="flashcards-display" data-number="0">
 
                 </div>
-                <button onclick="FlashcardsPage.changeFlashcard(1)">-&gt;</button>
+                <button id="next-button">-&gt;</button>
             </div>
             <div id="learn-confirm">
-                <button onclick="FlashcardsPage.changeRetention(1)">&#10003;</button>
-                <button onclick="FlashcardsPage.changeRetention(-2)">&#10007;</button>
+                <button id="correct-button">&#10003;</button>
+                <button id="incorrect-button">&#10007;</button>
                 <label id="flashcards-progress">?/?</label>
                 <label id="flashcards-retention">?</label>
             </div>
             <dialog id="save-progress-dialog">
                 <input id="save-name-input" type="text" placeholder="Name the file...">
-                <button onclick="closeDialogs()">Close</button>
+                <button class="close-button">Close</button>
             </dialog>
         </div>
+        <dialog id="keyboard-shortcuts-dialog">
+            <p>
+                Ctrl+s: Save To Disk<br>
+                Ctrl+o: Open File<br>
+                Shift+Enter: Add New Line Within Definition<br>
+                Ctrl+Enter: Add Linked Note<br>
+                Ctrl+/: Open Shortcuts
+            </p>
+            <button class="close-button">Close</button>
+        </dialog>
     </body>
 
 </html>

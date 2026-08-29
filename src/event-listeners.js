@@ -1,4 +1,4 @@
-import { EditorPage, FlashcardsPage, pageGroup } from "./pages.js";
+import * as pages from "./pages.js";
 
 // DOM Elements
 
@@ -31,6 +31,18 @@ let toEditorPageButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (do
 let saveButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-button"));
 let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-progress-button"));
 
+// Close buttons
+
+let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("close-button"));
+let openShortcutsButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("open-shortcuts-button"));
+
+// Flashcard widget buttons
+
+let previousButton = /** @type {HTMLButtonElement} */ (document.getElementById("previous-button"));
+let nextButton = /** @type {HTMLButtonElement} */ (document.getElementById("next-button"));
+let correctButton = /** @type {HTMLButtonElement} */ (document.getElementById("correct-button"));
+let incorrectButton = /** @type {HTMLButtonElement} */ (document.getElementById("incorrect-button"));
+
 // Clears file inputs on click.
 
 editorFileImport.onclick = function () {
@@ -44,11 +56,11 @@ flashcardFileImport.onclick = function () {
 // Loads files when the user adds a file.
 
 editorFileImport.oninput = function () {
-    EditorPage.readFile();
+    pages.EditorPage.readFile();
 }
 
 flashcardFileImport.oninput = function () {
-    FlashcardsPage.readFile();
+    pages.FlashcardsPage.readFile();
     learnConfirm.style.display = "grid";
 }
 
@@ -71,7 +83,7 @@ fileNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         fileNameDialog.close();
-        EditorPage.downloadJSON(fileNameInput.value || "notes.json");
+        pages.EditorPage.downloadJSON(fileNameInput.value || "notes.json");
     }
 }
 
@@ -84,7 +96,7 @@ saveNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         saveProgressDialog.close();
-        FlashcardsPage.downloadJSON(saveNameInput.value || "notes.json");
+        pages.FlashcardsPage.downloadJSON(saveNameInput.value || "notes.json");
     }
 }
 
@@ -92,12 +104,42 @@ saveNameInput.onkeydown = function (event) {
 
 for (let i = 0; i < toFlashcardsPageButtons.length; i++) { 
     toFlashcardsPageButtons[i].onclick = function () {
-        pageGroup.changePage("flashcards-page");
+        pages.pageGroup.changePage("flashcards-page");
     }
 }
 
 for (let i = 0; i < toEditorPageButtons.length; i++) {
     toEditorPageButtons[i].onclick = function () {
-        pageGroup.changePage("editor-page");
+        pages.pageGroup.changePage("editor-page");
     }
+}
+
+// Dialog opening and closing
+
+for (let i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].onclick = function () {
+        pages.closeDialogs();
+    }
+}
+
+for (let i = 0; i < openShortcutsButtons.length; i++) {
+    openShortcutsButtons[i].onclick = function () {
+        pages.openShortcuts();
+    }
+}
+
+previousButton.onclick = function () {
+    pages.FlashcardsPage.changeFlashcard(-1);
+}
+
+nextButton.onclick = function () {
+    pages.FlashcardsPage.changeFlashcard(1);
+}
+
+correctButton.onclick = function () {
+    pages.FlashcardsPage.changeRetention(1);
+}
+
+incorrectButton.onclick = function () {
+    pages.FlashcardsPage.changeRetention(-2);
 }

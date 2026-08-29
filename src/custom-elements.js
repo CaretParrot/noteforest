@@ -4,6 +4,7 @@ import { ctrl, shift } from "./shortcuts.js";
 // DOM Elements
 
 let editorNotes = /** @type {HTMLCollectionOf<EditorNote>} */ (document.getElementsByTagName("editor-note"));
+let flashcardNotes = /** @type {HTMLCollectionOf<FlashcardNote>} */ (document.getElementsByTagName("flashcard-note"));
 
 // Custom elements
 
@@ -193,8 +194,15 @@ export class FlashcardNote extends HTMLElement {
      */
     createKeyCard() {
         let newKey = document.createElement("h1");
-        // @ts-expect-error
-        newKey.innerHTML = this.dataset.key;
+
+        if (this.dataset.parentId !== "-1") {
+            // @ts-expect-error
+            newKey.innerHTML = `${flashcardNotes[parseInt(this.dataset.parentId)].children[0].innerHTML} -&gt; ${this.dataset.key}`;
+        } else {
+            // @ts-expect-error
+            newKey.innerHTML = this.dataset.key;
+        }
+
         newKey.style.display = "none";
         this.appendChild(newKey);
         return newKey;
