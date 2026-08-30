@@ -1,47 +1,7 @@
 import * as pages from "./pages.js";
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, learnConfirmButton, saveNameInput, fileNameInput, toFlashcardsPageButtons, toEditorPageButtons, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
 
 // DOM Elements
-
-// File imports
-
-let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
-let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
-
-// Dialogs
-
-let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("file-name-dialog"));
-let saveProgressDialog = /** @type {HTMLDialogElement} */ (document.getElementById("save-progress-dialog"));
-
-// Toolbars
-
-let learnConfirm = /** @type {HTMLDivElement} */ (document.getElementById("learn-confirm"));
-
-// File name inputs
-
-let saveNameInput = /** @type {HTMLInputElement} */ (document.getElementById("save-name-input"));
-let fileNameInput = /** @type {HTMLInputElement} */ (document.getElementById("file-name-input"));
-
-// Page navigation buttons
-
-let toFlashcardsPageButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("to-flashcards-page"));
-let toEditorPageButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("to-editor-page"));
-
-// Save buttons
-
-let saveButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-button"));
-let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getElementById("save-progress-button"));
-
-// Close buttons
-
-let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("close-button"));
-let openShortcutsButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("open-shortcuts-button"));
-
-// Flashcard widget buttons
-
-let previousButton = /** @type {HTMLButtonElement} */ (document.getElementById("previous-button"));
-let nextButton = /** @type {HTMLButtonElement} */ (document.getElementById("next-button"));
-let correctButton = /** @type {HTMLButtonElement} */ (document.getElementById("correct-button"));
-let incorrectButton = /** @type {HTMLButtonElement} */ (document.getElementById("incorrect-button"));
 
 // Clears file inputs on click.
 
@@ -61,7 +21,7 @@ editorFileImport.oninput = function () {
 
 flashcardFileImport.oninput = function () {
     pages.FlashcardsPage.readFile();
-    learnConfirm.style.display = "grid";
+    learnConfirmButton.style.display = "grid";
 }
 
 // Prompts user to input a file name for download.
@@ -102,7 +62,7 @@ saveNameInput.onkeydown = function (event) {
 
 // Page navigation transitions
 
-for (let i = 0; i < toFlashcardsPageButtons.length; i++) { 
+for (let i = 0; i < toFlashcardsPageButtons.length; i++) {
     toFlashcardsPageButtons[i].onclick = function () {
         pages.pageGroup.changePage("flashcards-page");
     }

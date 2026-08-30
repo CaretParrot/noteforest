@@ -1,10 +1,6 @@
 import { EditorPage } from "./pages.js";
 import { ctrl, shift } from "./shortcuts.js";
-
-// DOM Elements
-
-let editorNotes = /** @type {HTMLCollectionOf<EditorNote>} */ (document.getElementsByTagName("editor-note"));
-let flashcardNotes = /** @type {HTMLCollectionOf<FlashcardNote>} */ (document.getElementsByTagName("flashcard-note"));
+import { editorNotes, flashcardNotes } from "./dom.js";
 
 // Custom elements
 

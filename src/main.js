@@ -1,4 +1,4 @@
-import { EditorPage } from "./pages.js";
+import { EditorPage } from "./modules/pages.js";
 
 EditorPage.addNote();
 EditorPage.refreshLabelUpdating();

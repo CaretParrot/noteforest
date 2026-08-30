@@ -10,10 +10,11 @@
         <link rel="stylesheet" href="./styles.css">
         <script defer src="https://caretparrot.github.io/papaya-salad/script.js"></script>
         <script type="module" src="./main.js"></script>
-        <script type="module" src="./pages.js"></script>
-        <script type="module" src="./custom-elements.js"></script>
-        <script type="module" src="./shortcuts.js"></script>
-        <script type="module" src="./event-listeners.js"></script>
+        <script type="module" src="./modules/dom.js"></script>
+        <script type="module" src="./modules/pages.js"></script>
+        <script type="module" src="./modules/custom-elements.js"></script>
+        <script type="module" src="./modules/shortcuts.js"></script>
+        <script type="module" src="./modules/event-listeners.js"></script>
         <title>NoteForest</title>
     </head>
 
@@ -26,7 +27,7 @@
                 <button class="open-shortcuts-button">Shortcuts</button>
                 <button class="to-flashcards-page">Flashcards -&gt;</button>
             </div>
-            <div id="database-wrapper">
+            <div id="database">
 
             </div>
             <dialog id="file-name-dialog">
