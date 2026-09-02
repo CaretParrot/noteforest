@@ -1,12 +1,8 @@
 import { openShortcuts, closeDialogs } from "./pages.js";
+import { fileNameDialog, editorFileImport } from "./dom.js";
 
 export let ctrl = false;
 export let shift = false;
-
-// DOM Elements
-
-let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("file-name-dialog"));
-let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
 
 /**
  * Keybind Logic

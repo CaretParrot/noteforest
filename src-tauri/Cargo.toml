@@ -1,9 +1,9 @@
 [package]
 name = "noteforest"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-edition = "2021"
+version = "0.2.0"
+description = "NoteForest is a simple note-taking and flashcard application designed to be fast and easy to use. In addition to the standard term-and-definition input, notes may be linked back to a parent note. This allows for the easy creation of trees and mind maps."
+authors = ["CaretParrot"]
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

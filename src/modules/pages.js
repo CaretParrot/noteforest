@@ -1,33 +1,5 @@
 import { EditorNote, FlashcardNote } from "./custom-elements.js";
-
-// DOM Elements
-
-// Dialogs
-
-let fileNameDialog = /** @type {HTMLDialogElement} */ (document.getElementById("file-name-dialog"));
-let keyboardShortcutsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("keyboard-shortcuts-dialog"));
-
-// Editor page
-
-let database = /** @type {HTMLDivElement} */ (document.getElementById("database-wrapper"));
-let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
-let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
-
-// Flashcards page
-
-let flashcardsDisplay = /** @type {HTMLDivElement} */ (document.getElementById("flashcards-display"));
-let flashcardsProgress = /** @type {HTMLLabelElement} */ (document.getElementById("flashcards-progress"));
-let flashcardsRetention = /** @type {HTMLLabelElement} */ (document.getElementById("flashcards-retention"));
-
-// Custom elements
-
-let flashcardNotes = /** @type {HTMLCollectionOf<FlashcardNote>} */ (document.getElementsByTagName("flashcard-note"));
-let editorNotes = /** @type {HTMLCollectionOf<EditorNote>} */ (document.getElementsByTagName("editor-note"));
-
-// File import fields
-
-let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
-let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
+import { keyboardShortcutsDialog, database, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath } from "./dom.js";
 
 // @ts-expect-error
 export let pageGroup = new PageGroup("page", "grid");
@@ -229,6 +201,14 @@ export class FlashcardsPage {
         flashcardsProgress.innerHTML = `${flashcardsDisplay.dataset.number}/${flashcardsDisplay.children.length}`;
         // @ts-expect-error
         flashcardsRetention.innerHTML = flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.retention;
+
+        // @ts-expect-error
+        if (flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.parentId !== "-1") {
+            // @ts-expect-error
+            treePath.innerHTML = flashcardNotes[+flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.parentId].children[0].innerHTML;
+        } else {
+            treePath.innerHTML = "-";
+        }
     }
 
     /**
@@ -310,8 +290,10 @@ export class FlashcardsPage {
 export function closeDialogs() {
     fileNameDialog.close();
     keyboardShortcutsDialog.close();
+    saveProgressDialog.close();
 }
 
 export function openShortcuts() {
+    console.log("Hello!");
     keyboardShortcutsDialog.showModal();
 }
