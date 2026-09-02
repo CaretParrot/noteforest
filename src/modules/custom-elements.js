@@ -1,6 +1,6 @@
 import { EditorPage } from "./pages.js";
 import { ctrl, shift } from "./shortcuts.js";
-import { editorNotes, flashcardNotes } from "./dom.js";
+import { editorNotes } from "./dom.js";
 
 // Custom elements
 
@@ -191,13 +191,8 @@ export class FlashcardNote extends HTMLElement {
     createKeyCard() {
         let newKey = document.createElement("h1");
 
-        if (this.dataset.parentId !== "-1") {
-            // @ts-expect-error
-            newKey.innerHTML = `${flashcardNotes[parseInt(this.dataset.parentId)].children[0].innerHTML} -&gt; ${this.dataset.key}`;
-        } else {
-            // @ts-expect-error
-            newKey.innerHTML = this.dataset.key;
-        }
+        // @ts-expect-error
+        newKey.innerHTML = this.dataset.key;
 
         newKey.style.display = "none";
         this.appendChild(newKey);

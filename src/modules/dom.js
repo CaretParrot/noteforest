@@ -22,6 +22,7 @@ export let previousButton = /** @type {HTMLButtonElement} */ (document.getElemen
 export let nextButton = /** @type {HTMLButtonElement} */ (document.getElementById("next-button"));
 export let correctButton = /** @type {HTMLButtonElement} */ (document.getElementById("correct-button"));
 export let incorrectButton = /** @type {HTMLButtonElement} */ (document.getElementById("incorrect-button"));
+export let treePath = /** @type {HTMLParagraphElement} */ (document.getElementById("tree-path"));
 
 // Custom elements
 
@@ -35,7 +36,7 @@ export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getEl
 
 // Toolbars
 
-export let learnConfirmButton = /** @type {HTMLDivElement} */ (document.getElementById("learn-confirm"));
+export let flashcardsData = /** @type {HTMLDivElement} */ (document.getElementById("flashcards-data"));
 
 // File name inputs
 

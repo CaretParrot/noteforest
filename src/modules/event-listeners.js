@@ -1,5 +1,5 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, learnConfirmButton, saveNameInput, fileNameInput, toFlashcardsPageButtons, toEditorPageButtons, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, toFlashcardsPageButtons, toEditorPageButtons, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
 
 // DOM Elements
 
@@ -21,7 +21,7 @@ editorFileImport.oninput = function () {
 
 flashcardFileImport.oninput = function () {
     pages.FlashcardsPage.readFile();
-    learnConfirmButton.style.display = "grid";
+    flashcardsData.style.display = "grid";
 }
 
 // Prompts user to input a file name for download.

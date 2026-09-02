@@ -20,8 +20,8 @@
 
     <body>
         <div id="editor-page" class="page">
-            <h1>Editor</h1>
-            <div class="toolbar">
+            <div class="toolbar" id="editor-toolbar">
+                <h1>Editor</h1>
                 <input type="file" id="editor-file-import" accept=".json">
                 <button id="save-button">Save</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
@@ -36,8 +36,8 @@
             </dialog>
         </div>
         <div id="flashcards-page" class="page">
-            <h1>Flashcards</h1>
-            <div class="toolbar">
+            <div class="toolbar" id="flashcards-toolbar">
+                <h1>Flashcards</h1>
                 <input type="file" id="flashcard-file-import" accept=".json">
                 <button id="save-progress-button">Save</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
@@ -50,7 +50,8 @@
                 </div>
                 <button id="next-button">-&gt;</button>
             </div>
-            <div id="learn-confirm">
+            <div id="flashcards-data">
+                <p id="tree-path">-</p>
                 <button id="correct-button">&#10003;</button>
                 <button id="incorrect-button">&#10007;</button>
                 <label id="flashcards-progress">?/?</label>

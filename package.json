@@ -1,7 +1,7 @@
 {
   "name": "noteforest",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "tauri": "tauri"
@@ -11,6 +11,7 @@
     "jest": "^30.4.2"
   },
   "dependencies": {
-    "@tauri-apps/plugin-fs": "^2.5.1"
+    "@tauri-apps/plugin-fs": "^2.5.1",
+    "pdf-lib": "^1.17.1"
   }
 }
