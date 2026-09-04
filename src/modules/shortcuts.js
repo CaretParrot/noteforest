@@ -1,5 +1,5 @@
 import { openShortcuts, closeDialogs } from "./pages.js";
-import { fileNameDialog, editorFileImport } from "./dom.js";
+import { fileNameDialog, editorFileImport, flashcardFileImport, saveProgressDialog } from "./dom.js";
 
 export let ctrl = false;
 export let shift = false;
@@ -20,12 +20,27 @@ onkeydown = function (event) {
 
     if (ctrl === true && event.key === "s") {
         event.preventDefault();
-        fileNameDialog.showModal();
+        
+        let currentPage = document.getElementsByClassName("open")[0].id;
+
+        if (currentPage === "editor-page") {
+            fileNameDialog.showModal();
+        } else {
+            saveProgressDialog.showModal();
+        }
     }
 
     if (ctrl === true && event.key === "o") {
         event.preventDefault();
-        editorFileImport.click();
+
+        let currentPage = document.getElementsByClassName("open")[0].id;
+
+        if (currentPage === "editor-page") {
+            editorFileImport.click();
+        } else {
+            flashcardFileImport.click();
+        }
+
     }
 
     if (ctrl === true && event.key === "/") {

@@ -1,4 +1,4 @@
-import { EditorNote, FlashcardNote } from "./custom-elements.js";
+import { EditorNote } from "./custom-elements.js";
 import { keyboardShortcutsDialog, database, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath } from "./dom.js";
 
 // @ts-expect-error
