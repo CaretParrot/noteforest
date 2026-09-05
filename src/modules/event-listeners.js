@@ -1,5 +1,5 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton } from "./dom.js";
 
 // DOM Elements
 
@@ -22,6 +22,12 @@ editorFileImport.oninput = function () {
 flashcardFileImport.oninput = function () {
     pages.FlashcardsPage.readFile();
     flashcardsData.style.display = "grid";
+}
+
+// Print button
+
+printButton.onclick = function () {
+    pages.EditorPage.print();
 }
 
 // Prompts user to input a file name for download.
