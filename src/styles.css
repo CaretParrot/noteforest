@@ -26,6 +26,10 @@ body {
     grid: auto 1fr / 1fr;
 }
 
+#editor-toolbar {
+    grid: auto / auto auto auto auto auto auto;
+}
+
 #flashcards-page {
     grid: auto 1fr auto auto / 1fr;
 }
@@ -40,13 +44,18 @@ editor-note, flashcard-note {
     grid: auto / 1fr 5fr 5fr;
 }
 
+editor-note * {
+    width: 100%;
+    height: 100%;
+}
+
 flashcard-note * {
     width: 100%;
     height: 100%;
 }
 
 flashcard-note p {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 #database {
@@ -92,7 +101,8 @@ dialog::backdrop {
 }
 
 textarea {
-    white-space: pre;
+    white-space: pre-wrap;
+    height: "";
 }
 
 h1 {

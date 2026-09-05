@@ -12,6 +12,7 @@ export let openShortcutsButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>
 export let database = /** @type {HTMLDivElement} */ (document.getElementById("database"));
 export let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 export let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
+export let printButton = /** @type {HTMLButtonElement} */ (document.getElementById("print-button"));
 
 // Flashcards page
 
@@ -37,6 +38,8 @@ export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getEl
 // Toolbars
 
 export let flashcardsData = /** @type {HTMLDivElement} */ (document.getElementById("flashcards-data"));
+export let navSelects = /** @type {HTMLSelectElement} */ (document.getElementsByClassName("nav-select"));
+export let editorToolbar = /** @type {HTMLDivElement} */  (document.getElementById("editor-toolbar"));
 
 // File name inputs
 

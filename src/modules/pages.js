@@ -1,5 +1,5 @@
 import { EditorNote } from "./custom-elements.js";
-import { keyboardShortcutsDialog, database, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath } from "./dom.js";
+import { keyboardShortcutsDialog, database, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar } from "./dom.js";
 
 // @ts-expect-error
 export let pageGroup = new PageGroup("page", "grid");
@@ -133,6 +133,14 @@ export class EditorPage {
         downloadLink.download = fileName;
         downloadLink.click();
         downloadLink.remove();
+    }
+
+    static print() {
+        editorToolbar.style.display = "none";
+        database.style.border = "none";
+        window.print();
+        editorToolbar.style.display = "grid";
+        database.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1);";
     }
 }
 
