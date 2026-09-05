@@ -139,8 +139,8 @@ export class EditorPage {
         editorToolbar.style.display = "none";
         database.style.border = "none";
         window.print();
-        editorToolbar.style.display = "grid";
-        database.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1);";
+        editorToolbar.style.display = "flex";
+        database.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1)";
     }
 }
 
