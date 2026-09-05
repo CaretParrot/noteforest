@@ -3,10 +3,6 @@ body {
     height: 100%;
 }
 
-.toolbar {
-    grid: auto / auto auto auto auto auto;
-}
-
 .toolbar,
 .page,
 #flashcards-page,
@@ -26,15 +22,20 @@ body {
     grid: auto 1fr / 1fr;
 }
 
-#editor-toolbar {
-    grid: auto / auto auto auto auto auto auto;
+.toolbar {
+    display: flex;
+}
+
+.toolbar * {
+    height: 100%;
 }
 
 #flashcards-page {
-    grid: auto 1fr auto auto / 1fr;
+    grid: auto 1fr auto / 1fr;
 }
 
-editor-note, flashcard-note {
+editor-note,
+flashcard-note {
     height: 100%;
     background-color: transparent;
     border: none;
@@ -44,22 +45,16 @@ editor-note, flashcard-note {
     grid: auto / 1fr 5fr 5fr;
 }
 
-editor-note * {
-    width: 100%;
-    height: 100%;
-}
-
-flashcard-note * {
+editor-note *,
+flashcard-note *,
+#database,
+#flashcards * {
     width: 100%;
     height: 100%;
 }
 
 flashcard-note p {
     white-space: pre-wrap;
-}
-
-#database {
-    height: 100%;
 }
 
 input {
@@ -91,18 +86,13 @@ dialog::backdrop {
     align-content: stretch;
 }
 
-#flashcards * {
-    height: 100%;
-}
-
 #flashcards-data {
     grid: auto / 1fr 1fr 1fr 1fr 1fr;
-    display: none;
 }
 
 textarea {
     white-space: pre-wrap;
-    height: "";
+    field-sizing: content;
 }
 
 h1 {
