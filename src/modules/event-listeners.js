@@ -1,5 +1,5 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, toFlashcardsPageButtons, toEditorPageButtons, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton } from "./dom.js";
 
 // DOM Elements
 
@@ -62,15 +62,12 @@ saveNameInput.onkeydown = function (event) {
 
 // Page navigation transitions
 
-for (let i = 0; i < toFlashcardsPageButtons.length; i++) {
-    toFlashcardsPageButtons[i].onclick = function () {
-        pages.pageGroup.changePage("flashcards-page");
-    }
-}
-
-for (let i = 0; i < toEditorPageButtons.length; i++) {
-    toEditorPageButtons[i].onclick = function () {
-        pages.pageGroup.changePage("editor-page");
+for (let i = 0; i < navSelects.length; i++) {
+    navSelects[i].onchange = function () {
+        // @ts-expect-error
+        pages.pageGroup.changePage(navSelects[i].value);
+        // @ts-expect-error
+        navSelects[i].value = "->";
     }
 }
 
@@ -87,6 +84,8 @@ for (let i = 0; i < openShortcutsButtons.length; i++) {
         pages.openShortcuts();
     }
 }
+
+// Flashcards display
 
 previousButton.onclick = function () {
     pages.FlashcardsPage.changeFlashcard(-1);

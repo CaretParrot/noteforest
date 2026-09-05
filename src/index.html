@@ -25,7 +25,12 @@
                 <input type="file" id="editor-file-import" accept=".json">
                 <button id="save-button">Save</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
-                <button class="to-flashcards-page">Flashcards -&gt;</button>
+                <button id="print">Print</button>
+                <select class="nav-select" value="->">
+                    <option selected disabled>-></option>
+                    <option value="editor-page">Editor -&gt;</option>
+                    <option value="flashcards-page">Flashcards -&gt;</option>
+                </select>
             </div>
             <div id="database">
 
@@ -41,7 +46,11 @@
                 <input type="file" id="flashcard-file-import" accept=".json">
                 <button id="save-progress-button">Save</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
-                <button class="to-editor-page">Editor -&gt;</button>
+                <select class="nav-select" value="->">
+                    <option selected disabled>-></option>
+                    <option value="editor-page">Editor -&gt;</option>
+                    <option value="flashcards-page">Flashcards -&gt;</option>
+                </select>
             </div>
             <div id="flashcards">
                 <button id="previous-button">&lt;-</button>

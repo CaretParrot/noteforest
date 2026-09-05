@@ -190,10 +190,8 @@ export class FlashcardNote extends HTMLElement {
      */
     createKeyCard() {
         let newKey = document.createElement("h1");
-
         // @ts-expect-error
         newKey.innerHTML = this.dataset.key;
-
         newKey.style.display = "none";
         this.appendChild(newKey);
         return newKey;

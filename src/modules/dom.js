@@ -37,6 +37,7 @@ export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getEl
 // Toolbars
 
 export let flashcardsData = /** @type {HTMLDivElement} */ (document.getElementById("flashcards-data"));
+export let navSelects = /** @type {HTMLSelectElement} */ (document.getElementsByClassName("nav-select"));
 
 // File name inputs
 
