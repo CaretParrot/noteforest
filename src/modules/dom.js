@@ -9,7 +9,7 @@ export let openShortcutsButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>
 
 // Editor page
 
-export let database = /** @type {HTMLDivElement} */ (document.getElementById("database"));
+export let editor = /** @type {HTMLDivElement} */ (document.getElementById("editor"));
 export let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 export let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
 export let printButton = /** @type {HTMLButtonElement} */ (document.getElementById("print-button"));
@@ -34,6 +34,7 @@ export let flashcardNotes = /** @type {HTMLCollectionOf<FlashcardNote>} */ (docu
 
 export let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
 export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
+export let insightsFileImport = /** @type {HTMLInputElement} */ (document.getElementById("insights-file-import"));
 
 // Toolbars
 
@@ -59,3 +60,8 @@ export let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getEl
 // Close buttons
 
 export let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("close-button"));
+
+// Insights page
+
+
+export let averageRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("average-retention"));

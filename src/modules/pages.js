@@ -1,5 +1,5 @@
 import { EditorNote } from "./custom-elements.js";
-import { keyboardShortcutsDialog, database, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar } from "./dom.js";
+import { keyboardShortcutsDialog, editor, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar, averageRetention, insightsFileImport } from "./dom.js";
 
 // @ts-expect-error
 export let pageGroup = new PageGroup("page", "grid");
@@ -22,7 +22,7 @@ export class EditorPage {
         newNote.dataset.value = value;
         newNote.dataset.retention = String(retention);
 
-        database.appendChild(newNote);
+        editor.appendChild(newNote);
     }
 
     /**
@@ -137,10 +137,10 @@ export class EditorPage {
 
     static print() {
         editorToolbar.style.display = "none";
-        database.style.border = "none";
+        editor.style.border = "none";
         window.print();
         editorToolbar.style.display = "flex";
-        database.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1)";
+        editor.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1)";
     }
 }
 
@@ -292,6 +292,58 @@ export class FlashcardsPage {
         downloadLink.download = fileName;
         downloadLink.click();
         downloadLink.remove();
+    }
+}
+
+export class InsightsPage {
+    /**
+     * 
+     * @param {any} json 
+     */
+    static calcAverageRetention(json) {
+        let average = 0;
+
+        for (let i = 0; i < json.length; i++) {
+            average += json[i]["retention"];
+        }
+
+        averageRetention.innerHTML = String(average / json.length);
+    }
+
+    /**
+     * 
+     * @param {string} text 
+     */
+    static loadJSON(text) {
+        let json = JSON.parse(text);
+
+        InsightsPage.calcAverageRetention(json);
+    }
+
+    /**
+     * Reads in a file from the file input.
+     * 
+     * @returns {void}
+     */
+    static readFile() {
+        if (editorFileImport.files === null) {
+            return;
+        }
+
+        // @ts-expect-error
+        const file = insightsFileImport.files[0];
+        const reader = new FileReader();
+        let text;
+
+        reader.addEventListener("load", () => {
+            text = reader.result;
+            // @ts-expect-error
+            InsightsPage.loadJSON(text);
+        });
+
+        if (file) {
+            reader.readAsText(file);
+        }
     }
 }
 

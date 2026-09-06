@@ -4,6 +4,9 @@
   "version": "0.2.1",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
     "tauri": "tauri"
   },
   "devDependencies": {
@@ -11,7 +14,7 @@
     "jest": "^30.4.2"
   },
   "dependencies": {
-    "@tauri-apps/plugin-fs": "^2.5.1",
+    "@tauri-apps/plugin-fs": "^2.5.2",
     "pdf-lib": "^1.17.1"
   }
 }

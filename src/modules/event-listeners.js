@@ -1,7 +1,5 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton } from "./dom.js";
-
-// DOM Elements
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton, insightsFileImport } from "./dom.js";
 
 // Clears file inputs on click.
 
@@ -22,6 +20,10 @@ editorFileImport.oninput = function () {
 flashcardFileImport.oninput = function () {
     pages.FlashcardsPage.readFile();
     flashcardsData.style.display = "grid";
+}
+
+insightsFileImport.oninput = function () {
+    pages.InsightsPage.readFile();
 }
 
 // Print button
