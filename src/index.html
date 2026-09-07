@@ -11,7 +11,6 @@
         <script defer src="https://caretparrot.github.io/papaya-salad/script.js"></script>
         <script type="module" src="./main.js"></script>
         <script type="module" src="./modules/dom.js"></script>
-        <script type="module" src="./modules/io.js"></script>
         <script type="module" src="./modules/pages.js"></script>
         <script type="module" src="./modules/custom-elements.js"></script>
         <script type="module" src="./modules/shortcuts.js"></script>
@@ -32,6 +31,7 @@
                     <option value="editor-page">Editor -&gt;</option>
                     <option value="flashcards-page">Flashcards -&gt;</option>
                     <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
                 </select>
             </div>
             <div id="editor">
@@ -53,6 +53,7 @@
                     <option value="editor-page">Editor -&gt;</option>
                     <option value="flashcards-page">Flashcards -&gt;</option>
                     <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
                 </select>
             </div>
             <div id="flashcards">
@@ -84,15 +85,33 @@
                     <option value="editor-page">Editor -&gt;</option>
                     <option value="flashcards-page">Flashcards -&gt;</option>
                     <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
                 </select>
             </div>
-            <div id="insights">
-                <div class="two-column">
-                    <p>Average Retention</p>
-                    <p id="average-retention">???</p>
-                    <p>Median Retention</p>
-                    <p id="median-retention">???</p>
-                </div>
+            <div id="insights" class="two-column">
+                <p>Average Retention</p>
+                <p id="average-retention">???</p>
+                <p>Median Retention</p>
+                <p id="median-retention">???</p>
+            </div>
+        </div>
+        <div id="settings-page" class="page">
+            <div class="toolbar" id="settings-toolbar">
+                <h1>Settings</h1>
+                <button class="open-shortcuts-button">Shortcuts</button>
+                <select class="nav-select" value="->">
+                    <option selected disabled>-></option>
+                    <option value="editor-page">Editor -&gt;</option>
+                    <option value="flashcards-page">Flashcards -&gt;</option>
+                    <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
+                </select>
+            </div>
+            <div id="settings" class="two-column">
+                <p>Hue</p>
+                <input id="hue-value" type="number" min="0" max="360" value="240">
+                <p>Accent Hue</p>
+                <input id="accent-hue-value" type="number" min="0" max="360" value="270">
             </div>
         </div>
         <dialog id="keyboard-shortcuts-dialog">

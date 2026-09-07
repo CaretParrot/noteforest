@@ -65,3 +65,8 @@ export let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (do
 
 export let averageRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("average-retention"));
 export let medianRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("median-retention"));
+
+// Settings page
+
+export let hueValue = /** @type {HTMLInputElement} */ (document.getElementById("hue-value"));
+export let accentHueValue = /** @type {HTMLInputElement} */ (document.getElementById("accent-hue-value"));

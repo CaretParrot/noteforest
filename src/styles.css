@@ -8,7 +8,6 @@ body {
 #flashcards-page,
 #flashcards,
 #flashcards-data,
-.two-column,
 details {
     background-color: transparent;
     padding: 0;
@@ -26,10 +25,6 @@ details {
 
 .toolbar {
     display: flex;
-    height: 100%;
-}
-
-.toolbar * {
     height: 100%;
 }
 
@@ -104,4 +99,9 @@ textarea {
 
 h1 {
     font-size: 2rem;
+}
+
+#settings {
+    display: grid;
+    grid: auto / auto 1fr;
 }

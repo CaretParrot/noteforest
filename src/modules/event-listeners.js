@@ -1,5 +1,5 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton, insightsFileImport } from "./dom.js";
+import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton, insightsFileImport, hueValue, accentHueValue } from "./dom.js";
 
 // Clears file inputs on click.
 
@@ -109,4 +109,12 @@ correctButton.onclick = function () {
 
 incorrectButton.onclick = function () {
     pages.FlashcardsPage.changeRetention(-2);
+}
+
+hueValue.oninput = function () {
+    document.documentElement.style.setProperty("--hue", hueValue.value);
+}
+
+accentHueValue.oninput = function () {
+    document.documentElement.style.setProperty("--accent-hue", String(+accentHueValue.value));
 }
