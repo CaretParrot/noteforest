@@ -63,5 +63,5 @@ export let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (do
 
 // Insights page
 
-
 export let averageRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("average-retention"));
+export let medianRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("median-retention"));

@@ -1,5 +1,5 @@
 import { EditorNote } from "./custom-elements.js";
-import { keyboardShortcutsDialog, editor, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar, averageRetention, insightsFileImport } from "./dom.js";
+import { keyboardShortcutsDialog, editor, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar, averageRetention, medianRetention, insightsFileImport } from "./dom.js";
 
 // @ts-expect-error
 export let pageGroup = new PageGroup("page", "grid");
@@ -298,6 +298,15 @@ export class FlashcardsPage {
 export class InsightsPage {
     /**
      * 
+     * @param {number} num
+     * @param {number} places
+     */
+    static roundToPlaces(num, places) {
+        return Math.round(num * (10 ** places)) / (10 ** places);
+    }
+
+    /**
+     * 
      * @param {any} json 
      */
     static calcAverageRetention(json) {
@@ -307,7 +316,28 @@ export class InsightsPage {
             average += json[i]["retention"];
         }
 
-        averageRetention.innerHTML = String(average / json.length);
+        averageRetention.innerHTML = String(InsightsPage.roundToPlaces(average / json.length, 5));
+    }
+
+    /**
+     * 
+     * @param {any} json 
+     */
+    static calcMedianRetention(json) {
+        let retentions = [];
+
+        for (let i = 0; i < json.length; i++) {
+            retentions.push(json[i]["retention"]);
+        }
+
+        retentions.sort();
+        let middle = Math.floor(retentions.length / 2);
+
+        if (retentions.length % 2 === 0) {
+            medianRetention.innerHTML = String((retentions[middle] + retentions[middle + 1]) / 2);
+        } else {
+            medianRetention.innerHTML = String(retentions[middle]);
+        }
     }
 
     /**
@@ -318,6 +348,7 @@ export class InsightsPage {
         let json = JSON.parse(text);
 
         InsightsPage.calcAverageRetention(json);
+        InsightsPage.calcMedianRetention(json);
     }
 
     /**
