@@ -55,8 +55,12 @@ flashcard-note *,
     height: 100%;
 }
 
-flashcard-note p {
+flashcard-note * {
     white-space: pre-wrap;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
 }
 
 input {

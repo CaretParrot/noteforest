@@ -1,7 +1,11 @@
 import { EditorNote } from "./custom-elements.js";
+// @ts-expect-error
+import { PageGroup } from "https://caretparrot.github.io/papaya-salad/page-group.js";
 import { keyboardShortcutsDialog, editor, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar, averageRetention, medianRetention, insightsFileImport } from "./dom.js";
 
-// @ts-expect-error
+const EDITOR_CACHE = "editor-cache";
+const FLASHCARD_CACHE = "flashcard-cache";
+
 export let pageGroup = new PageGroup("page", "grid");
 
 export class EditorPage {
@@ -54,6 +58,8 @@ export class EditorPage {
                 }
             }
         }
+
+        EditorPage.cacheJSON();
     }
 
     /**
@@ -69,6 +75,19 @@ export class EditorPage {
         }
 
         return JSON.stringify(json);
+    }
+
+    static cacheJSON() {
+        localStorage.setItem(EDITOR_CACHE, EditorPage.generateJSON());
+    }
+
+    static loadCachedJSON() {
+        if (localStorage.getItem(EDITOR_CACHE) === undefined || localStorage.getItem(EDITOR_CACHE) === "") {
+            return false;
+        }
+
+        EditorPage.loadJSON(localStorage.getItem(EDITOR_CACHE) || "");
+        return true;
     }
 
     /**
@@ -217,6 +236,8 @@ export class FlashcardsPage {
         } else {
             treePath.innerHTML = "-";
         }
+
+        FlashcardsPage.cacheJSON();
     }
 
     /**
@@ -292,6 +313,19 @@ export class FlashcardsPage {
         downloadLink.download = fileName;
         downloadLink.click();
         downloadLink.remove();
+    }
+
+    static cacheJSON() {
+        localStorage.setItem(FLASHCARD_CACHE, FlashcardsPage.generateJSON());
+    }
+
+    static loadCachedJSON() {
+        if (localStorage.getItem(FLASHCARD_CACHE) === undefined || localStorage.getItem(FLASHCARD_CACHE) === "") {
+            return false;
+        }
+
+        FlashcardsPage.loadJSON(localStorage.getItem(FLASHCARD_CACHE) || "");
+        return true;
     }
 }
 

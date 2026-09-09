@@ -1,4 +1,10 @@
-import { EditorPage } from "./modules/pages.js";
+import { EditorPage, FlashcardsPage } from "./modules/pages.js";
 
-EditorPage.addNote();
-EditorPage.refreshLabelUpdating();
+// Adds a note to the editor page
+
+if (!EditorPage.loadCachedJSON()) {
+    EditorPage.addNote();
+    EditorPage.refreshLabelUpdating();
+}
+
+FlashcardsPage.loadCachedJSON();
