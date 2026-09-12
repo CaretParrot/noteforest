@@ -1,10 +1,11 @@
 import { EditorNote } from "./custom-elements.js";
 // @ts-expect-error
 import { PageGroup } from "https://caretparrot.github.io/papaya-salad/page-group.js";
-import { keyboardShortcutsDialog, editor, notesKeys, notesLabels, editorNotes, editorFileImport, flashcardNotes, flashcardsDisplay, flashcardsProgress, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsRetention, treePath, editorToolbar, averageRetention, medianRetention, insightsFileImport } from "./dom.js";
+import * as dom from "./dom.js";
 
 const EDITOR_CACHE = "editor-cache";
 const FLASHCARD_CACHE = "flashcard-cache";
+const SETTINGS = "settings";
 
 export let pageGroup = new PageGroup("page", "grid");
 
@@ -26,7 +27,7 @@ export class EditorPage {
         newNote.dataset.value = value;
         newNote.dataset.retention = String(retention);
 
-        editor.appendChild(newNote);
+        dom.editor.appendChild(newNote);
     }
 
     /**
@@ -49,11 +50,11 @@ export class EditorPage {
      * @returns {void}
      */
     static refreshLabelUpdating() {
-        for (let i = 0; i < notesKeys.length; i++) {
-            notesKeys[i].oninput = function () {
-                for (let j = 0; j < notesLabels.length; j++) {
-                    if (editorNotes[j].dataset.parentId === String(i)) {
-                        notesLabels[j].innerHTML = notesKeys[i].value;
+        for (let i = 0; i < dom.notesKeys.length; i++) {
+            dom.notesKeys[i].oninput = function () {
+                for (let j = 0; j < dom.notesLabels.length; j++) {
+                    if (dom.editorNotes[j].dataset.parentId === String(i)) {
+                        dom.notesLabels[j].innerHTML = dom.notesKeys[i].value;
                     }
                 }
             }
@@ -70,8 +71,8 @@ export class EditorPage {
     static generateJSON() {
         let json = [];
 
-        for (let i = 0; i < editorNotes.length; i++) {
-            json.push(editorNotes[i].toJSON());
+        for (let i = 0; i < dom.editorNotes.length; i++) {
+            json.push(dom.editorNotes[i].toJSON());
         }
 
         return JSON.stringify(json);
@@ -81,6 +82,10 @@ export class EditorPage {
         localStorage.setItem(EDITOR_CACHE, EditorPage.generateJSON());
     }
 
+    /**
+     * 
+     * @returns {boolean}
+     */
     static loadCachedJSON() {
         if (localStorage.getItem(EDITOR_CACHE) === undefined || localStorage.getItem(EDITOR_CACHE) === "") {
             return false;
@@ -98,8 +103,8 @@ export class EditorPage {
     static loadJSON(text) {
         let json = JSON.parse(text);
 
-        for (let i = editorNotes.length - 1; i >= 0; i--) {
-            editorNotes[i].remove();
+        for (let i = dom.editorNotes.length - 1; i >= 0; i--) {
+            dom.editorNotes[i].remove();
         }
 
         for (let i = 0; i < json.length; i++) {
@@ -115,11 +120,11 @@ export class EditorPage {
      * @returns {void}
      */
     static readFile() {
-        if (editorFileImport.files === null) {
+        if (dom.editorFileImport.files === null) {
             return;
         }
 
-        const file = editorFileImport.files[0];
+        const file = dom.editorFileImport.files[0];
         const reader = new FileReader();
         let text;
 
@@ -155,11 +160,17 @@ export class EditorPage {
     }
 
     static print() {
-        editorToolbar.style.display = "none";
-        editor.style.border = "none";
+        dom.editorToolbar.style.display = "none";
+        dom.editor.style.border = "none";
         window.print();
-        editorToolbar.style.display = "flex";
-        editor.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1)";
+        dom.editorToolbar.style.display = "flex";
+        dom.editor.style.border = "calc(var(--base-unit) / 4) solid hsla(0, 0%, 0%, 1)";
+    }
+
+    static clear() {
+        dom.editor.innerHTML = "";
+        EditorPage.addNote();
+        EditorPage.refreshLabelUpdating();
     }
 }
 
@@ -172,8 +183,8 @@ export class FlashcardsPage {
     static generateJSON() {
         let json = [];
 
-        for (let i = 0; i < flashcardNotes.length; i++) {
-            json.push(flashcardNotes[i].toJSON());
+        for (let i = 0; i < dom.flashcardNotes.length; i++) {
+            json.push(dom.flashcardNotes[i].toJSON());
         }
 
         return JSON.stringify(json);
@@ -187,7 +198,7 @@ export class FlashcardsPage {
         newCard.dataset.value = value;
         newCard.dataset.retention = String(retention);
 
-        flashcardsDisplay.appendChild(newCard);
+        dom.flashcardsDisplay.appendChild(newCard);
     }
 
     /**
@@ -197,13 +208,13 @@ export class FlashcardsPage {
      */
     static loadJSON(text) {
         let json = JSON.parse(text);
-        flashcardsDisplay.innerHTML = "";
+        dom.flashcardsDisplay.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
             FlashcardsPage.addCard(json[i]["parentId"], json[i]["key"], json[i]["value"], json[i]["retention"]);
         }
 
-        flashcardsDisplay.dataset.number = "1";
+        dom.flashcardsDisplay.dataset.number = "1";
 
         FlashcardsPage.updateFlashcards();
     }
@@ -212,29 +223,32 @@ export class FlashcardsPage {
      * Updates flashcard UI with the current number.
      */
     static updateFlashcards() {
-        for (let i = 0; i < flashcardsDisplay.children.length; i++) {
+        for (let i = 0; i < dom.flashcardsDisplay.children.length; i++) {
             // @ts-expect-error
-            flashcardsDisplay.children[i].children[0].style.display = "none";
+            dom.flashcardsDisplay.children[i].children[0].style.display = "none";
             // @ts-expect-error
-            flashcardsDisplay.children[i].children[1].style.display = "none";
+            dom.flashcardsDisplay.children[i].children[1].style.display = "none";
             // @ts-expect-error
-            flashcardsDisplay.children[i].style.display = "none";
+            dom.flashcardsDisplay.children[i].style.display = "none";
         }
 
-        // @ts-expect-error
-        flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].style.display = "initial";
-        // @ts-expect-error
-        flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].children[0].style.display = "block";
-        flashcardsProgress.innerHTML = `${flashcardsDisplay.dataset.number}/${flashcardsDisplay.children.length}`;
-        // @ts-expect-error
-        flashcardsRetention.innerHTML = flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.retention;
 
         // @ts-expect-error
-        if (flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.parentId !== "-1") {
+        dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].style.display = "initial";
+
+        // @ts-expect-error
+        dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].children[0].style.display = "block";
+        dom.flashcardsProgress.innerHTML = `${dom.flashcardsDisplay.dataset.number}/${dom.flashcardsDisplay.children.length}`;
+
+        // @ts-expect-error
+        dom.flashcardsRetention.innerHTML = dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].dataset.retention;
+
+        // @ts-expect-error
+        if (dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].dataset.parentId !== "-1") {
             // @ts-expect-error
-            treePath.innerHTML = flashcardNotes[+flashcardsDisplay.children[+flashcardsDisplay.dataset.number - 1].dataset.parentId].children[0].innerHTML;
+            dom.treePath.innerHTML = dom.flashcardNotes[+dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].dataset.parentId].children[0].innerHTML;
         } else {
-            treePath.innerHTML = "-";
+            dom.treePath.innerHTML = "-";
         }
 
         FlashcardsPage.cacheJSON();
@@ -246,14 +260,14 @@ export class FlashcardsPage {
      */
     static changeFlashcard(amount) {
         // @ts-expect-error
-        flashcardsDisplay.dataset.number = String(+flashcardsDisplay.dataset.number + amount);
+        dom.flashcardsDisplay.dataset.number = String(+dom.flashcardsDisplay.dataset.number + amount);
 
-        if (+flashcardsDisplay.dataset.number > flashcardsDisplay.children.length) {
-            flashcardsDisplay.dataset.number = "1";
+        if (+dom.flashcardsDisplay.dataset.number > dom.flashcardsDisplay.children.length) {
+            dom.flashcardsDisplay.dataset.number = "1";
         }
 
-        if (+flashcardsDisplay.dataset.number < 1) {
-            flashcardsDisplay.dataset.number = String(flashcardsDisplay.children.length);
+        if (+dom.flashcardsDisplay.dataset.number < 1) {
+            dom.flashcardsDisplay.dataset.number = String(dom.flashcardsDisplay.children.length);
         }
 
         FlashcardsPage.updateFlashcards();
@@ -265,11 +279,11 @@ export class FlashcardsPage {
      * @returns {void}
      */
     static readFile() {
-        if (flashcardFileImport.files === null) {
+        if (dom.flashcardFileImport.files === null) {
             return;
         }
 
-        const file = flashcardFileImport.files[0];
+        const file = dom.flashcardFileImport.files[0];
         const reader = new FileReader();
         let text;
 
@@ -290,7 +304,7 @@ export class FlashcardsPage {
      */
     static changeRetention(amount) {
         // @ts-expect-error
-        flashcardsDisplay.children[flashcardsDisplay.dataset.number - 1].dataset.retention = String(+flashcardsDisplay.children[flashcardsDisplay.dataset.number - 1].dataset.retention + amount);
+        dom.flashcardsDisplay.children[dom.flashcardsDisplay.dataset.number - 1].dataset.retention = String(+dom.flashcardsDisplay.children[dom.flashcardsDisplay.dataset.number - 1].dataset.retention + amount);
 
         FlashcardsPage.changeFlashcard(1);
     }
@@ -350,7 +364,7 @@ export class InsightsPage {
             average += json[i]["retention"];
         }
 
-        averageRetention.innerHTML = String(InsightsPage.roundToPlaces(average / json.length, 5));
+        dom.averageRetention.innerHTML = String(InsightsPage.roundToPlaces(average / json.length, 5));
     }
 
     /**
@@ -368,9 +382,9 @@ export class InsightsPage {
         let middle = Math.floor(retentions.length / 2);
 
         if (retentions.length % 2 === 0) {
-            medianRetention.innerHTML = String((retentions[middle] + retentions[middle + 1]) / 2);
+            dom.medianRetention.innerHTML = String((retentions[middle] + retentions[middle + 1]) / 2);
         } else {
-            medianRetention.innerHTML = String(retentions[middle]);
+            dom.medianRetention.innerHTML = String(retentions[middle]);
         }
     }
 
@@ -391,12 +405,12 @@ export class InsightsPage {
      * @returns {void}
      */
     static readFile() {
-        if (editorFileImport.files === null) {
+        if (dom.editorFileImport.files === null) {
             return;
         }
 
         // @ts-expect-error
-        const file = insightsFileImport.files[0];
+        const file = dom.insightsFileImport.files[0];
         const reader = new FileReader();
         let text;
 
@@ -412,13 +426,39 @@ export class InsightsPage {
     }
 }
 
+export class SettingsPage {
+    static saveSettings() {
+        localStorage.setItem(SETTINGS, JSON.stringify(
+            {
+                hue: +dom.hueValue.value,
+                accentHue: +dom.accentHueValue.value
+            }
+        ));
+    }
+
+    static loadSettings() {
+        if (localStorage.getItem(SETTINGS) === undefined || localStorage.getItem(SETTINGS) === "") {
+            return false;
+        }
+
+        // @ts-expect-error
+        let settings = JSON.parse(localStorage.getItem(SETTINGS));
+
+        dom.hueValue.value = String(settings.hue);
+        document.documentElement.style.setProperty("--hue", dom.hueValue.value);
+        dom.accentHueValue.value = String(settings.accentHue);
+        document.documentElement.style.setProperty("--accent-hue", String(+dom.accentHueValue.value));
+    }    
+    
+}
+
 export function closeDialogs() {
-    fileNameDialog.close();
-    keyboardShortcutsDialog.close();
-    saveProgressDialog.close();
+    dom.fileNameDialog.close();
+    dom.keyboardShortcutsDialog.close();
+    dom.saveProgressDialog.close();
 }
 
 export function openShortcuts() {
     console.log("Hello!");
-    keyboardShortcutsDialog.showModal();
+    dom.keyboardShortcutsDialog.showModal();
 }

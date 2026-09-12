@@ -1,4 +1,4 @@
-import { EditorPage, FlashcardsPage } from "./modules/pages.js";
+import { EditorPage, FlashcardsPage, SettingsPage } from "./modules/pages.js";
 
 // Adds a note to the editor page
 
@@ -8,3 +8,4 @@ if (!EditorPage.loadCachedJSON()) {
 }
 
 FlashcardsPage.loadCachedJSON();
+SettingsPage.loadSettings();

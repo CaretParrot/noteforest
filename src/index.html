@@ -23,6 +23,7 @@
                 <h1>Editor</h1>
                 <input type="file" id="editor-file-import" accept=".json">
                 <button id="save-button">Save</button>
+                <button id="clear-editor-button">Clear</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
                 <button id="print-button">Print</button>
                 <select class="nav-select" value="->">
@@ -39,6 +40,10 @@
             <dialog id="file-name-dialog">
                 <input id="file-name-input" type="text" placeholder="Name the file...">
                 <button class="close-button">Close</button>
+            </dialog>
+            <dialog id="clear-editor-dialog">
+                <p>Are you sure you want to clear the editor?</p>
+                <button id="confirm-clear-editor-button">Clear</button>
             </dialog>
         </div>
         <div id="flashcards-page" class="page">
