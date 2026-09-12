@@ -9,10 +9,14 @@ export let openShortcutsButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>
 
 // Editor page
 
-export let database = /** @type {HTMLDivElement} */ (document.getElementById("database"));
+export let editor = /** @type {HTMLDivElement} */ (document.getElementById("editor"));
 export let notesLabels = /** @type {HTMLCollectionOf<HTMLAnchorElement>} */ (document.getElementsByClassName("label"));
 export let notesKeys = /** @type {HTMLCollectionOf<HTMLInputElement>} */ (document.getElementsByClassName("key"));
 export let printButton = /** @type {HTMLButtonElement} */ (document.getElementById("print-button"));
+export let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
+export let clearEditorButton = /** @type {HTMLButtonElement} */ (document.getElementById("clear-editor-button"));
+export let confirmClearEditorButton = /** @type {HTMLButtonElement} */ (document.getElementById("confirm-clear-editor-button"));
+export let clearEditorDialog = /** @type {HTMLDialogElement} */ (document.getElementById("clear-editor-dialog"));
 
 // Flashcards page
 
@@ -24,16 +28,15 @@ export let nextButton = /** @type {HTMLButtonElement} */ (document.getElementByI
 export let correctButton = /** @type {HTMLButtonElement} */ (document.getElementById("correct-button"));
 export let incorrectButton = /** @type {HTMLButtonElement} */ (document.getElementById("incorrect-button"));
 export let treePath = /** @type {HTMLParagraphElement} */ (document.getElementById("tree-path"));
+export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
+export let clearFlashcardsButton = /** @type {HTMLButtonElement} */ (document.getElementById("clear-flashcards-button"));
+export let confirmClearFlashcardsButton = /** @type {HTMLButtonElement} */ (document.getElementById("confirm-clear-flashcards-button"));
+export let clearFlashcardsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("clear-flashcards-dialog"));
 
 // Custom elements
 
 export let editorNotes = /** @type {HTMLCollectionOf<EditorNote>} */ (document.getElementsByTagName("editor-note"));
 export let flashcardNotes = /** @type {HTMLCollectionOf<FlashcardNote>} */ (document.getElementsByTagName("flashcard-note"));
-
-// File import fields
-
-export let editorFileImport = /** @type {HTMLInputElement} */ (document.getElementById("editor-file-import"));
-export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
 
 // Toolbars
 
@@ -59,3 +62,14 @@ export let saveProgressButton = /** @type {HTMLButtonElement} */ (document.getEl
 // Close buttons
 
 export let closeButtons = /** @type {HTMLCollectionOf<HTMLButtonElement>} */ (document.getElementsByClassName("close-button"));
+
+// Insights page
+
+export let averageRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("average-retention"));
+export let medianRetention = /** @type {HTMLParagraphElement} */ (document.getElementById("median-retention"));
+export let insightsFileImport = /** @type {HTMLInputElement} */ (document.getElementById("insights-file-import"));
+
+// Settings page
+
+export let hueValue = /** @type {HTMLInputElement} */ (document.getElementById("hue-value"));
+export let accentHueValue = /** @type {HTMLInputElement} */ (document.getElementById("accent-hue-value"));

@@ -1,43 +1,45 @@
 import * as pages from "./pages.js";
-import { editorFileImport, flashcardFileImport, fileNameDialog, saveProgressDialog, flashcardsData, saveNameInput, fileNameInput, navSelects, saveButton, saveProgressButton, closeButtons, openShortcutsButtons, previousButton, nextButton, correctButton, incorrectButton, printButton } from "./dom.js";
-
-// DOM Elements
+import * as dom from "./dom.js";
 
 // Clears file inputs on click.
 
-editorFileImport.onclick = function () {
-    editorFileImport.value = "";
+dom.editorFileImport.onclick = function () {
+    dom.editorFileImport.value = "";
 }
 
-flashcardFileImport.onclick = function () {
-    flashcardFileImport.value = "";
+dom.flashcardFileImport.onclick = function () {
+    dom.flashcardFileImport.value = "";
 }
 
 // Loads files when the user adds a file.
 
-editorFileImport.oninput = function () {
+dom.editorFileImport.oninput = function () {
     pages.EditorPage.readFile();
 }
 
-flashcardFileImport.oninput = function () {
+dom.flashcardFileImport.oninput = function () {
     pages.FlashcardsPage.readFile();
-    flashcardsData.style.display = "grid";
+    dom.flashcardsData.style.display = "grid";
+}
+
+dom.insightsFileImport.oninput = function () {
+    pages.InsightsPage.readFile();
 }
 
 // Print button
 
-printButton.onclick = function () {
+dom.printButton.onclick = function () {
     pages.EditorPage.print();
 }
 
 // Prompts user to input a file name for download.
 
-saveButton.onclick = function () {
-    fileNameDialog.showModal();
+dom.saveButton.onclick = function () {
+    dom.fileNameDialog.showModal();
 }
 
-saveProgressButton.onclick = function () {
-    saveProgressDialog.showModal();
+dom.saveProgressButton.onclick = function () {
+    dom.saveProgressDialog.showModal();
 }
 
 /**
@@ -45,11 +47,11 @@ saveProgressButton.onclick = function () {
  * 
  * @param {*} event 
  */
-fileNameInput.onkeydown = function (event) {
+dom.fileNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        fileNameDialog.close();
-        pages.EditorPage.downloadJSON(fileNameInput.value || "notes.json");
+        dom.fileNameDialog.close();
+        pages.EditorPage.downloadJSON(dom.fileNameInput.value || "notes.json");
     }
 }
 
@@ -58,53 +60,81 @@ fileNameInput.onkeydown = function (event) {
  * 
  * @param {*} event 
  */
-saveNameInput.onkeydown = function (event) {
+dom.saveNameInput.onkeydown = function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        saveProgressDialog.close();
-        pages.FlashcardsPage.downloadJSON(saveNameInput.value || "notes.json");
+        dom.saveProgressDialog.close();
+        pages.FlashcardsPage.downloadJSON(dom.saveNameInput.value || "notes.json");
     }
 }
 
 // Page navigation transitions
 
-for (let i = 0; i < navSelects.length; i++) {
-    navSelects[i].onchange = function () {
+for (let i = 0; i < dom.navSelects.length; i++) {
+    dom.navSelects[i].onchange = function () {
         // @ts-expect-error
-        pages.pageGroup.changePage(navSelects[i].value);
+        pages.pageGroup.changePage(dom.navSelects[i].value);
         // @ts-expect-error
-        navSelects[i].value = "->";
+        dom.navSelects[i].value = "->";
     }
 }
 
 // Dialog opening and closing
 
-for (let i = 0; i < closeButtons.length; i++) {
-    closeButtons[i].onclick = function () {
+for (let i = 0; i < dom.closeButtons.length; i++) {
+    dom.closeButtons[i].onclick = function () {
         pages.closeDialogs();
     }
 }
 
-for (let i = 0; i < openShortcutsButtons.length; i++) {
-    openShortcutsButtons[i].onclick = function () {
+for (let i = 0; i < dom.openShortcutsButtons.length; i++) {
+    dom.openShortcutsButtons[i].onclick = function () {
         pages.openShortcuts();
     }
 }
 
 // Flashcards display
 
-previousButton.onclick = function () {
+dom.previousButton.onclick = function () {
     pages.FlashcardsPage.changeFlashcard(-1);
 }
 
-nextButton.onclick = function () {
+dom.nextButton.onclick = function () {
     pages.FlashcardsPage.changeFlashcard(1);
 }
 
-correctButton.onclick = function () {
+dom.correctButton.onclick = function () {
     pages.FlashcardsPage.changeRetention(1);
 }
 
-incorrectButton.onclick = function () {
+dom.incorrectButton.onclick = function () {
     pages.FlashcardsPage.changeRetention(-2);
+}
+
+dom.hueValue.oninput = function () {
+    document.documentElement.style.setProperty("--hue", dom.hueValue.value);
+    pages.SettingsPage.saveSettings();
+}
+
+dom.accentHueValue.oninput = function () {
+    document.documentElement.style.setProperty("--accent-hue", String(+dom.accentHueValue.value));
+    pages.SettingsPage.saveSettings();
+}
+
+dom.clearEditorButton.onclick = function () {
+    dom.clearEditorDialog.showModal();
+}
+
+dom.confirmClearEditorButton.onclick = function () {
+    pages.EditorPage.clear();
+    dom.clearEditorDialog.close();
+}
+
+dom.clearFlashcardsButton.onclick = function () {
+    dom.clearFlashcardsDialog.showModal();
+}
+
+dom.confirmClearFlashcardsButton.onclick = function () {
+    pages.FlashcardsPage.clear();
+    dom.clearFlashcardsDialog.close();
 }

@@ -8,7 +8,6 @@
         <link rel="icon" href="https://caretparrot.github.io/papaya-salad/Profile Picture.png">
         <link rel="stylesheet" href="https://caretparrot.github.io/papaya-palettes/default.css">
         <link rel="stylesheet" href="./styles.css">
-        <script defer src="https://caretparrot.github.io/papaya-salad/script.js"></script>
         <script type="module" src="./main.js"></script>
         <script type="module" src="./modules/dom.js"></script>
         <script type="module" src="./modules/pages.js"></script>
@@ -24,20 +23,27 @@
                 <h1>Editor</h1>
                 <input type="file" id="editor-file-import" accept=".json">
                 <button id="save-button">Save</button>
+                <button id="clear-editor-button">Clear</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
                 <button id="print-button">Print</button>
                 <select class="nav-select" value="->">
                     <option selected disabled>-></option>
                     <option value="editor-page">Editor -&gt;</option>
                     <option value="flashcards-page">Flashcards -&gt;</option>
+                    <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
                 </select>
             </div>
-            <div id="database">
+            <div id="editor">
 
             </div>
             <dialog id="file-name-dialog">
                 <input id="file-name-input" type="text" placeholder="Name the file...">
                 <button class="close-button">Close</button>
+            </dialog>
+            <dialog id="clear-editor-dialog">
+                <p>Are you sure you want to clear the editor?</p>
+                <button id="confirm-clear-editor-button">Clear</button>
             </dialog>
         </div>
         <div id="flashcards-page" class="page">
@@ -45,11 +51,14 @@
                 <h1>Flashcards</h1>
                 <input type="file" id="flashcard-file-import" accept=".json">
                 <button id="save-progress-button">Save</button>
+                <button id="clear-flashcards-button">Clear</button>
                 <button class="open-shortcuts-button">Shortcuts</button>
                 <select class="nav-select" value="->">
                     <option selected disabled>-></option>
                     <option value="editor-page">Editor -&gt;</option>
                     <option value="flashcards-page">Flashcards -&gt;</option>
+                    <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
                 </select>
             </div>
             <div id="flashcards">
@@ -70,6 +79,49 @@
                 <input id="save-name-input" type="text" placeholder="Name the file...">
                 <button class="close-button">Close</button>
             </dialog>
+            <dialog id="clear-flashcards-dialog">
+                <p>Are you sure you want to clear your flashcards?</p>
+                <button id="confirm-clear-flashcards-button">Clear</button>
+            </dialog>
+        </div>
+        <div id="insights-page" class="page">
+            <div class="toolbar" id="insights-toolbar">
+                <h1>Insights</h1>
+                <input type="file" id="insights-file-import" accept=".json">
+                <button class="open-shortcuts-button">Shortcuts</button>
+                <select class="nav-select" value="->">
+                    <option selected disabled>-></option>
+                    <option value="editor-page">Editor -&gt;</option>
+                    <option value="flashcards-page">Flashcards -&gt;</option>
+                    <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
+                </select>
+            </div>
+            <div id="insights" class="two-column">
+                <p>Average Retention</p>
+                <p id="average-retention">???</p>
+                <p>Median Retention</p>
+                <p id="median-retention">???</p>
+            </div>
+        </div>
+        <div id="settings-page" class="page">
+            <div class="toolbar" id="settings-toolbar">
+                <h1>Settings</h1>
+                <button class="open-shortcuts-button">Shortcuts</button>
+                <select class="nav-select" value="->">
+                    <option selected disabled>-></option>
+                    <option value="editor-page">Editor -&gt;</option>
+                    <option value="flashcards-page">Flashcards -&gt;</option>
+                    <option value="insights-page">Insights -&gt;</option>
+                    <option value="settings-page">Settings -&gt;</option>
+                </select>
+            </div>
+            <div id="settings" class="two-column">
+                <p>Hue</p>
+                <input id="hue-value" type="number" min="0" max="360" value="240">
+                <p>Accent Hue</p>
+                <input id="accent-hue-value" type="number" min="0" max="360" value="270">
+            </div>
         </div>
         <dialog id="keyboard-shortcuts-dialog">
             <p>

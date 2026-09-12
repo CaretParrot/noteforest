@@ -1,17 +1,46 @@
 {
-  "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "default",
-  "description": "Capability for the main window",
-  "windows": [
-    "main"
-  ],
-  "permissions": [
-    "core:default",
-    "opener:default",
-    "fs:default",
-    {
-        "identifier": "fs:allow-exists",
-        "allow": [{"path": "APPDATA/*"}]
-    }
-  ]
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "default",
+    "description": "Capability for the main window",
+    "windows": [
+        "main"
+    ],
+    "permissions": [
+        "core:default",
+        "opener:default",
+        "fs:default",
+        {
+            "identifier": "fs:allow-exists",
+            "allow": [
+                {
+                    "path": "$DOCUMENT"
+                },
+                {
+                    "path": "$DOCUMENT/**/*"
+                }
+            ]
+        },
+        {
+            "identifier": "fs:allow-mkdir",
+            "allow": [
+                {
+                    "path": "$DOCUMENT"
+                },
+                {
+                    "path": "$DOCUMENT/**/*"
+                }
+            ]
+        },
+        {
+            "identifier": "fs:allow-write-text-file",
+            "allow": [
+                {
+                    "path": "$DOCUMENT"
+                },
+                {
+                    "path": "$DOCUMENT/**/*"
+                }
+            ]
+        }
+    ]
 }
