@@ -232,7 +232,6 @@ export class FlashcardsPage {
             dom.flashcardsDisplay.children[i].style.display = "none";
         }
 
-
         // @ts-expect-error
         dom.flashcardsDisplay.children[+dom.flashcardsDisplay.dataset.number - 1].style.display = "initial";
 
@@ -340,6 +339,15 @@ export class FlashcardsPage {
 
         FlashcardsPage.loadJSON(localStorage.getItem(FLASHCARD_CACHE) || "");
         return true;
+    }
+
+    static clear() {
+        dom.flashcardsDisplay.innerHTML = "";
+        dom.treePath.innerHTML = "-";
+        dom.flashcardsRetention.innerHTML = "?";
+        dom.flashcardsProgress.innerHTML = "?/?";
+        
+        FlashcardsPage.cacheJSON();
     }
 }
 

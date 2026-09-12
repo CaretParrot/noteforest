@@ -129,3 +129,12 @@ dom.confirmClearEditorButton.onclick = function () {
     pages.EditorPage.clear();
     dom.clearEditorDialog.close();
 }
+
+dom.clearFlashcardsButton.onclick = function () {
+    dom.clearFlashcardsDialog.showModal();
+}
+
+dom.confirmClearFlashcardsButton.onclick = function () {
+    pages.FlashcardsPage.clear();
+    dom.clearFlashcardsDialog.close();
+}

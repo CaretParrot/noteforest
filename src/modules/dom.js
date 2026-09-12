@@ -29,6 +29,9 @@ export let correctButton = /** @type {HTMLButtonElement} */ (document.getElement
 export let incorrectButton = /** @type {HTMLButtonElement} */ (document.getElementById("incorrect-button"));
 export let treePath = /** @type {HTMLParagraphElement} */ (document.getElementById("tree-path"));
 export let flashcardFileImport = /** @type {HTMLInputElement} */ (document.getElementById("flashcard-file-import"));
+export let clearFlashcardsButton = /** @type {HTMLButtonElement} */ (document.getElementById("clear-flashcards-button"));
+export let confirmClearFlashcardsButton = /** @type {HTMLButtonElement} */ (document.getElementById("confirm-clear-flashcards-button"));
+export let clearFlashcardsDialog = /** @type {HTMLDialogElement} */ (document.getElementById("clear-flashcards-dialog"));
 
 // Custom elements
 
