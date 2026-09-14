@@ -2,6 +2,21 @@ import { EditorPage } from "./pages.js";
 import { ctrl, shift } from "./shortcuts.js";
 import { editorNotes } from "./dom.js";
 
+/**
+ * @typedef {object} NotesJSONFile
+ * @property {Date} last_modified_date
+ * @property {NotesJSON[]} notes
+ */
+
+/**
+ * @typedef {object} NotesJSON
+ * @property {number} id
+ * @property {number} parentId
+ * @property {string} key
+ * @property {string} value
+ * @property {number} retention 
+ */
+
 // Custom elements
 
 export class EditorNote extends HTMLElement {
@@ -12,19 +27,17 @@ export class EditorNote extends HTMLElement {
     /**
      * Returns the properties of the note to compile into a JSON file.
      * 
-     * @returns {object}
+     * @returns {NotesJSON}
      */
     toJSON() {
         return {
             id: +this.id,
-            // @ts-expect-error
-            parentId: +this.dataset.parentId,
+            parentId: +(this.dataset.parentId || -1),
             // @ts-expect-error
             key: this.children[1].value,
             // @ts-expect-error
             value: this.children[2].value,
-            // @ts-expect-error
-            retention: +this.dataset.retention
+            retention: +(this.dataset.retention || 0)
         }
     }
 
@@ -169,7 +182,7 @@ export class FlashcardNote extends HTMLElement {
     /**
      * Returns the properties of the note to compile into a JSON file.
      * 
-     * @returns {object}
+     * @returns {NotesJSON}
      */
     toJSON() {
         return {
