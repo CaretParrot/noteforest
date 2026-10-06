@@ -69,10 +69,16 @@ export class EditorPage {
      * @returns {string}
      */
     static generateJSON() {
-        let json = [];
+        /**
+         * @type {import("./custom-elements.js").NotesJSONFile}
+         */
+        let json = {
+            last_modified_date: (new Date()),
+            notes: /** @type {import("./custom-elements.js").NotesJSON[]} */ ([])
+        };
 
         for (let i = 0; i < dom.editorNotes.length; i++) {
-            json.push(dom.editorNotes[i].toJSON());
+            json.notes.push(dom.editorNotes[i].toJSON());
         }
 
         return JSON.stringify(json);
@@ -87,7 +93,7 @@ export class EditorPage {
      * @returns {boolean}
      */
     static loadCachedJSON() {
-        if (localStorage.getItem(EDITOR_CACHE) === undefined || localStorage.getItem(EDITOR_CACHE) === "") {
+        if (localStorage.getItem(EDITOR_CACHE) === null || localStorage.getItem(EDITOR_CACHE) === "") {
             return false;
         }
 
@@ -108,7 +114,7 @@ export class EditorPage {
         }
 
         for (let i = 0; i < json.length; i++) {
-            EditorPage.addNote(json[i]["parentId"], json[i]["key"], json[i]["value"], json[i]["retention"]);
+            EditorPage.addNote(json.notes[i]["parentId"], json.notes[i]["key"], json.notes[i]["value"], json.notes[i]["retention"]);
         }
 
         EditorPage.refreshLabelUpdating();
@@ -181,10 +187,19 @@ export class FlashcardsPage {
      * @returns {string}
      */
     static generateJSON() {
-        let json = [];
+        let json = {
+            last_modified_date: (new Date()),
+            notes: /** @type {import("./custom-elements.js").NotesJSON[]} */ ([])
+        };
+
+        let maxId = -1;
 
         for (let i = 0; i < dom.flashcardNotes.length; i++) {
-            json.push(dom.flashcardNotes[i].toJSON());
+            json.notes.push(dom.flashcardNotes[i].toJSON());
+
+            if (+json.notes[i].id > maxId) {
+                maxId = +json.notes[i].id;
+            }
         }
 
         return JSON.stringify(json);
@@ -211,7 +226,7 @@ export class FlashcardsPage {
         dom.flashcardsDisplay.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            FlashcardsPage.addCard(json[i]["parentId"], json[i]["key"], json[i]["value"], json[i]["retention"]);
+            FlashcardsPage.addCard(json.notes[i]["parentId"], json.notes[i]["key"], json.notes[i]["value"], json.notes[i]["retention"]);
         }
 
         dom.flashcardsDisplay.dataset.number = "1";
@@ -333,7 +348,7 @@ export class FlashcardsPage {
     }
 
     static loadCachedJSON() {
-        if (localStorage.getItem(FLASHCARD_CACHE) === undefined || localStorage.getItem(FLASHCARD_CACHE) === "") {
+        if (localStorage.getItem(FLASHCARD_CACHE) === null || localStorage.getItem(FLASHCARD_CACHE) === "") {
             return false;
         }
 
@@ -445,7 +460,7 @@ export class SettingsPage {
     }
 
     static loadSettings() {
-        if (localStorage.getItem(SETTINGS) === undefined || localStorage.getItem(SETTINGS) === "") {
+        if (localStorage.getItem(SETTINGS) === null || localStorage.getItem(SETTINGS) === "") {
             return false;
         }
 
